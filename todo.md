@@ -104,3 +104,10 @@
 - [x] DemoBanner — update text to reflect interactive capability
 - [x] Vitest: demo submit procedure tests
 - [x] Checkpoint after Guided Full Demo is complete
+
+## Follow-up Polish
+- [x] DemoSubmitFinancials: responsive grid for financial figures on mobile (2-col → 1-col)
+- [x] DemoSubmitFinancials: result cards stack cleanly on narrow screens
+- [x] Portfolio.tsx: admin-only "Reset Demo Data" button with confirmation and toast feedback
+- [x] Landing.tsx: add "Run the AI Pipeline →" secondary CTA button linking to /demo/try
+- [x] Checkpoint after all follow-ups complete

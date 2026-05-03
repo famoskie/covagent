@@ -1,16 +1,20 @@
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
 import {
   AlertTriangle,
   ArrowRight,
   Building2,
   CheckCircle2,
   FileText,
+  RefreshCw,
   Shield,
   TrendingDown,
   TrendingUp,
   XCircle,
 } from "lucide-react";
+import { useState } from "react";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { toast } from "sonner";
 import { useLocation } from "wouter";
 
 function StatusBadge({ status }: { status: string }) {
@@ -35,8 +39,23 @@ const CHART_COLORS = {
 };
 
 export default function Portfolio() {
-  const { data, isLoading } = trpc.portfolio.summary.useQuery();
+  const { data, isLoading, refetch } = trpc.portfolio.summary.useQuery();
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
+  const userRole = (user as { role?: string })?.role ?? "rm";
+  const [resetting, setResetting] = useState(false);
+
+  const resetDemo = trpc.demo.resetDemoData.useMutation({
+    onSuccess: (result) => {
+      toast.success(`Demo data reset — ${result.deleted} submission${result.deleted !== 1 ? "s" : ""} removed.`);
+      refetch();
+      setResetting(false);
+    },
+    onError: () => {
+      toast.error("Failed to reset demo data.");
+      setResetting(false);
+    },
+  });
 
   if (isLoading) {
     return (
@@ -68,9 +87,27 @@ export default function Portfolio() {
             Real-time covenant compliance across all active borrowers
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground bg-card border border-border rounded-lg px-3 py-2">
-          <Shield className="h-3.5 w-3.5 text-primary" />
-          <span>CCO Dashboard</span>
+        <div className="flex items-center gap-2">
+          {userRole === "admin" && (
+            <button
+              onClick={() => {
+                if (confirm("Reset all demo submissions? This will remove demo data from the portfolio.")) {
+                  setResetting(true);
+                  resetDemo.mutate();
+                }
+              }}
+              disabled={resetting || resetDemo.isPending}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg px-3 py-2 hover:bg-accent transition-colors disabled:opacity-50"
+              title="Remove all demo-mode financial submissions"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${resetting ? "animate-spin" : ""}`} />
+              <span className="hidden sm:inline">Reset Demo Data</span>
+            </button>
+          )}
+          <div className="flex items-center gap-2 text-xs text-muted-foreground bg-card border border-border rounded-lg px-3 py-2">
+            <Shield className="h-3.5 w-3.5 text-primary" />
+            <span>CCO Dashboard</span>
+          </div>
         </div>
       </div>
 

@@ -188,10 +188,10 @@ export default function DemoSubmitFinancials() {
           Back to Portfolio
         </button>
         <div className="flex items-center gap-3 mb-1">
-          <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+          <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
             <Zap className="h-5 w-5 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">Try It Live</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Try It Live</h1>
         </div>
         <p className="text-sm text-muted-foreground mt-1 ml-12">
           Submit real financial data and watch the AI pipeline run — covenant evaluation, breach detection, and narrative generation — all in real time.
@@ -267,7 +267,7 @@ export default function DemoSubmitFinancials() {
           {selectedScenario !== null && (
             <div className="bg-card border border-border rounded-xl p-5">
               <h3 className="font-semibold text-foreground text-sm mb-3">Financial figures that will be submitted:</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="grid grid-cols-2 gap-3 text-xs">
                 {[
                   { label: "EBITDA", value: scenario?.values.ebitda },
                   { label: "Total Debt", value: scenario?.values.totalDebt },
@@ -336,29 +336,29 @@ export default function DemoSubmitFinancials() {
           <div className={`bg-white border-2 rounded-2xl p-7 shadow-sm ${
             evalResult.evaluationSummary.breachCount > 0 ? "border-rose-300" : evalResult.evaluationSummary.warningCount > 0 ? "border-amber-300" : "border-emerald-300"
           }`}>
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
               <div className="flex items-center gap-3">
                 {evalResult.evaluationSummary.breachCount > 0 ? (
-                  <div className="h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center">
-                    <TrendingDown className="h-6 w-6 text-rose-600" />
+                  <div className="h-10 w-10 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                    <TrendingDown className="h-5 w-5 text-rose-600" />
                   </div>
                 ) : evalResult.evaluationSummary.warningCount > 0 ? (
-                  <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                    <AlertTriangle className="h-6 w-6 text-amber-600" />
+                  <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                    <AlertTriangle className="h-5 w-5 text-amber-600" />
                   </div>
                 ) : (
-                  <div className="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                  <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                   </div>
                 )}
                 <div>
-                  <h2 className="font-bold text-foreground text-lg">Evaluation Complete</h2>
+                  <h2 className="font-bold text-foreground text-base">Evaluation Complete</h2>
                   <p className="text-sm text-muted-foreground">
                     {borrower?.name} · {scenario?.values.periodLabel}
                   </p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right">
                 <div className={`text-2xl font-bold font-mono ${
                   evalResult.evaluationSummary.breachCount > 0 ? "text-rose-600" : evalResult.evaluationSummary.warningCount > 0 ? "text-amber-600" : "text-emerald-600"
                 }`}>
@@ -405,11 +405,11 @@ export default function DemoSubmitFinancials() {
 
           {/* AI Narrative */}
           <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-gradient-to-r from-rose-50 to-transparent">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-b border-border bg-gradient-to-r from-rose-50 to-transparent">
               <div className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-rose-600" />
                 <h3 className="font-semibold text-foreground">AI Covenant Narrative</h3>
-                <span className="text-xs text-muted-foreground">— for Relationship Managers</span>
+                <span className="text-xs text-muted-foreground hidden sm:inline">— for Relationship Managers</span>
               </div>
               <button
                 onClick={handleGenerateNarrative}

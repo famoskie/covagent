@@ -120,16 +120,26 @@ export default function Landing() {
             Explore Live Demo
             <ChevronRight className="h-4 w-4" />
           </button>
+          <button
+            onClick={() => { enterDemo(); setLocation("/demo/try"); }}
+            className="flex items-center gap-2 border-2 border-primary/30 text-primary bg-primary/5 px-8 py-3.5 rounded-xl font-semibold text-base hover:bg-primary/10 transition-all w-full sm:w-auto justify-center"
+          >
+            <Zap className="h-5 w-5" />
+            Run the AI Pipeline
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex items-center justify-center gap-4 mt-3">
           <a
             href={getLoginUrl()}
-            className="flex items-center gap-2 border border-border text-foreground px-8 py-3.5 rounded-xl font-medium text-base hover:bg-accent transition-colors w-full sm:w-auto justify-center"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            Sign In to Your Account
+            Sign In to Your Account →
           </a>
         </div>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          No account required to explore the demo · Read-only access · Real data
+          No account required · Explore the dashboard or run the AI pipeline live
         </p>
       </section>
 
@@ -182,14 +192,24 @@ export default function Landing() {
           <p className="text-muted-foreground max-w-lg mx-auto mb-8 text-sm leading-relaxed">
             The demo is loaded with 3 real borrowers, 6 covenant rules, and live breach and warning data. Explore every page of the platform before deciding to create an account.
           </p>
-          <button
-            onClick={handleTryDemo}
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-xl font-semibold hover:opacity-90 transition-all shadow-lg shadow-primary/20"
-          >
-            <Building2 className="h-5 w-5" />
-            Launch Demo Dashboard
-            <ChevronRight className="h-4 w-4" />
-          </button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={handleTryDemo}
+              className="flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:opacity-90 transition-all shadow-lg shadow-primary/20"
+            >
+              <Building2 className="h-5 w-5" />
+              Launch Demo Dashboard
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => { enterDemo(); setLocation("/demo/try"); }}
+              className="flex items-center gap-2 border-2 border-primary/30 text-primary bg-primary/5 px-7 py-3.5 rounded-xl font-semibold hover:bg-primary/10 transition-all"
+            >
+              <Zap className="h-5 w-5" />
+              Run the AI Pipeline
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </section>
 
