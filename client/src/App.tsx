@@ -1,10 +1,16 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import DashboardLayout from "@/components/DashboardLayout";
+import DemoLayout from "@/components/DemoLayout";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { DemoProvider, useDemo } from "./contexts/DemoContext";
+import { useAuth } from "./_core/hooks/useAuth";
+
+// Pages
+import Landing from "./pages/Landing";
 import Portfolio from "./pages/Portfolio";
 import Borrowers from "./pages/Borrowers";
 import BorrowerDetail from "./pages/BorrowerDetail";
@@ -13,7 +19,54 @@ import AlertsFeed from "./pages/AlertsFeed";
 import CovenantConfig from "./pages/CovenantConfig";
 import UserManagement from "./pages/UserManagement";
 
+// Demo pages
+import DemoPortfolio from "./pages/DemoPortfolio";
+import DemoBorrowers from "./pages/DemoBorrowers";
+import DemoBorrowerDetail from "./pages/DemoBorrowerDetail";
+import DemoAlerts from "./pages/DemoAlerts";
+
 function Router() {
+  const { user, loading } = useAuth();
+  const { isDemoMode } = useDemo();
+
+  // Demo routes — no auth required
+  if (isDemoMode) {
+    return (
+      <DemoLayout>
+        <Switch>
+          <Route path="/dashboard" component={DemoPortfolio} />
+          <Route path="/demo/borrowers/:id" component={DemoBorrowerDetail} />
+          <Route path="/demo/borrowers" component={DemoBorrowers} />
+          <Route path="/demo/alerts" component={DemoAlerts} />
+          {/* Redirect any other path to demo dashboard */}
+          <Route>{() => { window.location.replace("/dashboard"); return null; }}</Route>
+        </Switch>
+      </DemoLayout>
+    );
+  }
+
+  // Show landing page for unauthenticated users (not in demo mode)
+  if (!loading && !user) {
+    return (
+      <Switch>
+        <Route path="/" component={Landing} />
+        {/* Allow /dashboard to enter demo mode from direct link */}
+        <Route path="/dashboard">{() => { window.location.replace("/"); return null; }}</Route>
+        <Route component={Landing} />
+      </Switch>
+    );
+  }
+
+  // While auth is loading, show nothing to avoid flash
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  // Authenticated routes
   return (
     <DashboardLayout>
       <Switch>
@@ -35,10 +88,12 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <DemoProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </DemoProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

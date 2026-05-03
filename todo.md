@@ -47,3 +47,15 @@
 - [x] Responsive layout check
 - [x] Empty/loading/error states on all pages
 - [x] Final checkpoint
+
+## Demo Mode (Public Access)
+- [x] Public landing page at / with product overview, feature highlights, and "Try Demo" + "Sign In" CTAs
+- [x] Demo context: publicProcedure variants of all read queries (portfolio, borrowers, alerts, etc.)
+- [x] Demo mode state: React context that tracks whether user is in demo mode (no auth required)
+- [x] Demo banner: persistent top bar in demo mode explaining it is read-only and prompting sign-in
+- [x] Route guard: write/mutate actions (submit financials, add covenant, etc.) show upgrade prompt in demo mode
+- [x] Demo data: ensure seed data is always present and visible to unauthenticated users
+- [x] DashboardLayout: allow unauthenticated access when in demo mode (skip login redirect)
+- [x] App.tsx: / shows landing page for unauthenticated, dashboard for authenticated or demo mode
+- [x] Vitest: demo mode context and public procedure tests
+- [x] Checkpoint: save after demo mode is complete
