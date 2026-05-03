@@ -22,7 +22,7 @@ export default function DemoBanner() {
         <Eye className="h-4 w-4 shrink-0" />
         <span className="font-medium">Demo Mode</span>
         <span className="text-primary-foreground/70 hidden sm:inline">
-          — You're exploring CovAgent with sample data. All write actions are disabled.
+          — You're in interactive demo mode. Submit financials and generate AI narratives freely.
         </span>
       </div>
       <div className="flex items-center gap-2 shrink-0">

@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE `financial_submissions` ADD COLUMN `isDemo` int NOT NULL DEFAULT 0",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute ALTER TABLE `financial_submissions` ADD COLUMN `isDemo` int NOT NULL DEFAULT 0",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 192
+}

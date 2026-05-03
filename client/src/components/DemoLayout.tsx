@@ -26,6 +26,7 @@ import {
   LogIn,
   PanelLeft,
   Shield,
+  Zap,
 } from "lucide-react";
 import { CSSProperties, useState } from "react";
 import { useLocation } from "wouter";
@@ -35,6 +36,7 @@ const demoNavItems = [
   { icon: Building2, label: "Borrowers", path: "/demo/borrowers" },
   { icon: AlertTriangle, label: "Alerts", path: "/demo/alerts" },
   { icon: Code2, label: "How the AI Works", path: "/tech-stack" },
+  { icon: Zap, label: "Try It Live", path: "/demo/try", highlight: true },
 ];
 
 const SIDEBAR_WIDTH_KEY = "demo-sidebar-width";
@@ -89,11 +91,21 @@ function DemoLayoutContent({ children, setSidebarWidth }: { children: React.Reac
           <SidebarMenu className="px-2">
             {demoNavItems.map((item) => {
               const isActive = location === item.path || (item.path !== "/dashboard" && location.startsWith(item.path));
+              const isHighlight = (item as { highlight?: boolean }).highlight;
               return (
                 <SidebarMenuItem key={item.path}>
-                  <SidebarMenuButton isActive={isActive} onClick={() => setLocation(item.path)} tooltip={item.label} className="h-10 transition-all font-normal">
-                    <item.icon className={`h-4 w-4 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-                    <span>{item.label}</span>
+                  <SidebarMenuButton
+                    isActive={isActive}
+                    onClick={() => setLocation(item.path)}
+                    tooltip={item.label}
+                    className={`h-10 transition-all font-normal ${
+                      isHighlight && !isActive
+                        ? "text-primary bg-primary/8 hover:bg-primary/15 border border-primary/20"
+                        : ""
+                    }`}
+                  >
+                    <item.icon className={`h-4 w-4 ${isActive ? "text-primary" : isHighlight ? "text-primary" : "text-muted-foreground"}`} />
+                    <span className={isHighlight && !isActive ? "font-semibold text-primary" : ""}>{item.label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );

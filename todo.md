@@ -92,3 +92,15 @@
 - [x] Section 4: AI Explainability Principles — what the AI can/cannot do, data scope, human oversight
 - [x] Section 5: Why This Matters for PMs — PM ownership of AI behaviour, prompt design, output validation
 - [x] Checkpoint after AI explainer rewrite
+
+## Guided Full Demo Mode
+- [x] Add isDemo flag (int, default 0) to financial_submissions table via ALTER TABLE
+- [x] Add demo.submitFinancials publicProcedure — runs full covenant evaluation, marks submission as demo
+- [x] Add demo.generateNarrative publicProcedure — LLM narrative for demo borrowers
+- [x] Add demo.resetDemoData publicProcedure — deletes all is_demo=1 submissions, results, alerts
+- [x] DemoSubmitFinancials.tsx page — guided 3-step walkthrough with pre-filled values, real-time result display
+- [x] DemoBorrowerDetail.tsx — unlock AI narrative generation in demo mode
+- [x] DemoLayout — add "Try It Live" nav item pointing to demo submit page
+- [x] DemoBanner — update text to reflect interactive capability
+- [x] Vitest: demo submit procedure tests
+- [x] Checkpoint after Guided Full Demo is complete

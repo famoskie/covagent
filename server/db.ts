@@ -27,6 +27,7 @@ import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
+// Re-export getDb so other modules can access the raw drizzle instance
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {

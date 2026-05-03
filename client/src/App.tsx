@@ -24,6 +24,7 @@ import DemoPortfolio from "./pages/DemoPortfolio";
 import DemoBorrowers from "./pages/DemoBorrowers";
 import DemoBorrowerDetail from "./pages/DemoBorrowerDetail";
 import DemoAlerts from "./pages/DemoAlerts";
+import DemoSubmitFinancials from "./pages/DemoSubmitFinancials";
 import TechStack from "./pages/TechStack";
 
 function Router() {
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/demo/borrowers" component={DemoBorrowers} />
           <Route path="/demo/alerts" component={DemoAlerts} />
           <Route path="/tech-stack" component={TechStack} />
+          <Route path="/demo/try" component={DemoSubmitFinancials} />
           {/* Redirect any other path to demo dashboard */}
           <Route>{() => { window.location.replace("/dashboard"); return null; }}</Route>
         </Switch>

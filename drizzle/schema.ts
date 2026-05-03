@@ -107,6 +107,7 @@ export const financialSubmissions = mysqlTable("financial_submissions", {
   operatingCashFlow: decimal("operatingCashFlow", { precision: 18, scale: 2 }),
   debtServicePayments: decimal("debtServicePayments", { precision: 18, scale: 2 }),
   notes: text("notes"),
+  isDemo: int("isDemo").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
