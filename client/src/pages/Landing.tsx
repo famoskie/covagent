@@ -205,6 +205,77 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Open Source Agents */}
+      <section className="bg-slate-900 border-y border-slate-800 py-10 sm:py-14">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
+            {/* Left: copy */}
+            <div className="flex-1 min-w-0">
+              <div className="inline-flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/30 rounded-full px-3 py-1 text-xs text-emerald-400 font-medium mb-4">
+                <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                Open Source
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3">
+                The AI agents are open source.
+                <br />
+                <span className="text-emerald-400">Use them in your own project.</span>
+              </h2>
+              <p className="text-slate-400 text-sm leading-relaxed max-w-lg mb-5">
+                The two core AI components powering CovAgent — the Covenant Evaluation Engine and the LLM Narrative Agent — are extracted into a standalone TypeScript library. Zero platform dependencies. Works with OpenAI, Anthropic, or any LLM.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="https://github.com/oluwafemi-oso/covagent"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-white text-slate-900 px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-slate-100 transition-colors justify-center"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                  View on GitHub
+                </a>
+                <button
+                  onClick={() => setLocation("/tech-stack")}
+                  className="flex items-center gap-2 border border-slate-600 text-slate-300 px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-slate-800 transition-colors justify-center"
+                >
+                  How the AI Works →
+                </button>
+              </div>
+            </div>
+
+            {/* Right: code snippet */}
+            <div className="w-full lg:w-auto lg:min-w-[340px] shrink-0">
+              <div className="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700">
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-700 bg-slate-800/80">
+                  <div className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  <span className="text-xs text-slate-400 ml-2 font-mono">terminal</span>
+                </div>
+                <pre
+                  className="px-5 py-4 text-xs font-mono leading-relaxed overflow-x-auto"
+                  dangerouslySetInnerHTML={{ __html: [
+                    '<span style="color:#64748b"># Install</span>',
+                    '<span style="color:#34d399">npm</span> <span style="color:#f1f5f9">install covagent-agents</span>',
+                    '',
+                    '<span style="color:#64748b"># Use the Covenant Engine</span>',
+                    '<span style="color:#60a5fa">import</span> <span style="color:#f1f5f9">{ CovenantEvaluationAgent }</span>',
+                    '  <span style="color:#60a5fa">from</span> <span style="color:#fbbf24">"covagent-agents"</span><span style="color:#f1f5f9">;</span>',
+                    '',
+                    '<span style="color:#60a5fa">const</span> <span style="color:#f1f5f9">agent</span> <span style="color:#60a5fa">=</span> <span style="color:#60a5fa">new</span> <span style="color:#fde68a">CovenantEvaluationAgent</span><span style="color:#f1f5f9">();</span>',
+                    '<span style="color:#60a5fa">const</span> <span style="color:#f1f5f9">report</span> <span style="color:#60a5fa">=</span> <span style="color:#f1f5f9">agent.</span><span style="color:#fde68a">evaluate</span><span style="color:#f1f5f9">({</span>',
+                    '  <span style="color:#f1f5f9">statement, rules</span>',
+                    '<span style="color:#f1f5f9">});</span>',
+                    '',
+                    '<span style="color:#64748b"># → Compliant | Warning | Breach</span>',
+                  ].join('\n') }}
+                />
+              </div>
+              <p className="text-xs text-slate-500 text-center mt-2">MIT License · TypeScript · Zero dependencies</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Demo CTA section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-10 sm:pb-16">
         <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-2xl p-6 sm:p-10 text-center">
