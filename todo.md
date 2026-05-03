@@ -81,3 +81,14 @@
 - [x] Auto-play mode: cycles through layers automatically when nothing is hovered
 - [x] Replace static diagram in TechStack.tsx with AnimatedArchDiagram component
 - [x] Checkpoint after animation enhancement is complete
+
+## AI Explainer Page Rewrite
+- [x] Rename page title to "How the AI Works" / "The Agentic AI Explained"
+- [x] Remove generic web stack layer breakdown (frontend, API, backend, database sections)
+- [x] Keep animated architecture diagram but simplify to show only the AI/agentic flow
+- [x] Section 1: What is an Agentic AI? — plain-language definition with CovAgent context
+- [x] Section 2: The Covenant Evaluation Engine — rule-based decision logic, formula breakdown, status determination
+- [x] Section 3: The LLM Narrative Pipeline — 6-step flow, prompt anatomy, guardrails, output
+- [x] Section 4: AI Explainability Principles — what the AI can/cannot do, data scope, human oversight
+- [x] Section 5: Why This Matters for PMs — PM ownership of AI behaviour, prompt design, output validation
+- [x] Checkpoint after AI explainer rewrite
