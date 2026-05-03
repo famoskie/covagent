@@ -91,9 +91,9 @@ export default function Landing() {
             </a>
             <button
               onClick={handleTryDemo}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 py-1.5"
+              className="hidden sm:block text-sm text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 py-1.5"
             >
-              Demo
+              Try Live Demo
             </button>
             <a
               href={getLoginUrl()}

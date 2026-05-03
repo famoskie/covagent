@@ -1,0 +1,46 @@
+{
+  "query": "SELECT b.name, cr.covenantType, cr.calculatedValue, cr.status FROM covenant_results cr JOIN borrowers b ON cr.borrowerId = b.id ORDER BY cr.borrowerId, cr.id",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute SELECT b.name, cr.covenantType, cr.calculatedValue, cr.status FROM covenant_results cr JOIN borrowers b ON cr.borrowerId = b.id ORDER BY cr.borrowerId, cr.id",
+  "rows": [
+    {
+      "name": "Meridian Manufacturing Co.",
+      "covenantType": "DSCR",
+      "calculatedValue": "1.2258",
+      "status": "Warning"
+    },
+    {
+      "name": "Meridian Manufacturing Co.",
+      "covenantType": "Leverage Ratio",
+      "calculatedValue": "4.0000",
+      "status": "Compliant"
+    },
+    {
+      "name": "Apex Retail Group",
+      "covenantType": "Current Ratio",
+      "calculatedValue": "1.0690",
+      "status": "Breach"
+    },
+    {
+      "name": "Apex Retail Group",
+      "covenantType": "Interest Coverage",
+      "calculatedValue": "2.4000",
+      "status": "Warning"
+    },
+    {
+      "name": "BlueSky Logistics LLC",
+      "covenantType": "DSCR",
+      "calculatedValue": "1.3659",
+      "status": "Compliant"
+    },
+    {
+      "name": "BlueSky Logistics LLC",
+      "covenantType": "Debt to EBITDA",
+      "calculatedValue": "3.5000",
+      "status": "Compliant"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\tcovenantType\tcalculatedValue\tstatus\nMeridian Manufacturing Co.\tDSCR\t1.2258\tWarning\nMeridian Manufacturing Co.\tLeverage Ratio\t4.0000\tCompliant\nApex Retail Group\tCurrent Ratio\t1.0690\tBreach\nApex Retail Group\tInterest Coverage\t2.4000\tWarning\nBlueSky Logistics LLC\tDSCR\t1.3659\tCompliant\nBlueSky Logistics LLC\tDebt to EBITDA\t3.5000\tCompliant\n",
+  "stderr": "",
+  "execution_time_ms": 61
+}
