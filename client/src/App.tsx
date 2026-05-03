@@ -3,7 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import DashboardLayout from "@/components/DashboardLayout";
 import DemoLayout from "@/components/DemoLayout";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { DemoProvider, useDemo } from "./contexts/DemoContext";
@@ -27,12 +27,29 @@ import DemoAlerts from "./pages/DemoAlerts";
 import DemoSubmitFinancials from "./pages/DemoSubmitFinancials";
 import TechStack from "./pages/TechStack";
 
+const DEMO_PATHS = ["/dashboard", "/demo/", "/demo"];
+
+function isDemoPath(path: string) {
+  return DEMO_PATHS.some((p) => path === p || path.startsWith("/demo/"));
+}
+
 function Router() {
   const { user, loading } = useAuth();
   const { isDemoMode } = useDemo();
+  const [location] = useLocation();
 
-  // Demo routes — no auth required
-  if (isDemoMode) {
+  // Landing page and tech-stack are ALWAYS public — never redirect away from them
+  if (location === "/" || location === "/tech-stack") {
+    return (
+      <Switch>
+        <Route path="/" component={Landing} />
+        <Route path="/tech-stack" component={TechStack} />
+      </Switch>
+    );
+  }
+
+  // Demo routes — only when user is already on a demo path and demo mode is active
+  if (isDemoMode && (isDemoPath(location) || location.startsWith("/demo"))) {
     return (
       <DemoLayout>
         <Switch>
@@ -42,21 +59,18 @@ function Router() {
           <Route path="/demo/alerts" component={DemoAlerts} />
           <Route path="/tech-stack" component={TechStack} />
           <Route path="/demo/try" component={DemoSubmitFinancials} />
-          {/* Redirect any other path to demo dashboard */}
-          <Route>{() => { window.location.replace("/dashboard"); return null; }}</Route>
+          <Route>{() => { window.location.replace("/"); return null; }}</Route>
         </Switch>
       </DemoLayout>
     );
   }
 
-  // Show landing page for unauthenticated users (not in demo mode)
+  // Unauthenticated, non-demo path — show landing page
   if (!loading && !user) {
     return (
       <Switch>
         <Route path="/" component={Landing} />
         <Route path="/tech-stack" component={TechStack} />
-        {/* Allow /dashboard to enter demo mode from direct link */}
-        <Route path="/dashboard">{() => { window.location.replace("/"); return null; }}</Route>
         <Route component={Landing} />
       </Switch>
     );
