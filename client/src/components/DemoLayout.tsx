@@ -34,7 +34,7 @@ const demoNavItems = [
   { icon: LayoutDashboard, label: "Portfolio", path: "/dashboard" },
   { icon: Building2, label: "Borrowers", path: "/demo/borrowers" },
   { icon: AlertTriangle, label: "Alerts", path: "/demo/alerts" },
-  { icon: Code2, label: "How It's Built", path: "/tech-stack" },
+  { icon: Code2, label: "How the AI Works", path: "/tech-stack" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "demo-sidebar-width";

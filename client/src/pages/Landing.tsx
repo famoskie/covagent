@@ -77,7 +77,7 @@ export default function Landing() {
             onClick={() => setLocation("/tech-stack")}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
           >
-            How It's Built
+            How the AI Works
           </button>
           <button
             onClick={handleTryDemo}

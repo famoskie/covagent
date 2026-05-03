@@ -52,7 +52,7 @@ const navItems = [
   { icon: AlertTriangle, label: "Alerts", path: "/alerts" },
   { icon: BarChart3, label: "Covenants", path: "/covenants", roles: ["admin"] },
   { icon: Users, label: "User Management", path: "/admin/users", roles: ["admin"] },
-  { icon: Code2, label: "How It's Built", path: "/tech-stack" },
+  { icon: Code2, label: "How the AI Works", path: "/tech-stack" },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
