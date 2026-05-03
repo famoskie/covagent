@@ -1,11 +1,10 @@
+import AnimatedArchDiagram from "@/components/AnimatedArchDiagram";
 import { getLoginUrl } from "@/const";
 import { useDemo } from "@/contexts/DemoContext";
 import {
-  ArrowDown,
   ArrowRight,
   Bot,
   Brain,
-  ChevronRight,
   Code2,
   Database,
   FileJson,
@@ -256,59 +255,23 @@ export default function TechStack() {
             <span className="text-xs text-muted-foreground ml-2">Click any layer to jump to its details</span>
           </div>
 
-          {/* Visual stack diagram */}
-          <div className="flex flex-col items-center gap-1">
-            {[
-              { id: "frontend", label: "Browser / React Frontend", sublabel: "React 19 · TypeScript · Tailwind · shadcn/ui · Recharts", color: "blue" },
-              { id: "trpc",     label: "tRPC API Layer",            sublabel: "Type-safe procedures · Zod validation · React Query cache", color: "indigo" },
-              { id: "backend",  label: "Express Server",            sublabel: "Node.js · OAuth middleware · Session cookies · Context", color: "violet" },
-              { id: "engine",   label: "Covenant Evaluation Engine",sublabel: "DSCR · Leverage · Current Ratio · Interest Coverage · Alerts", color: "amber" },
-              { id: "database", label: "MySQL Database (TiDB)",     sublabel: "Drizzle ORM · 7 tables · Type-safe queries · Migrations", color: "emerald" },
-            ].map((layer, i) => {
-              const c = colorMap[layer.color];
-              return (
-                <div key={layer.id} className="w-full flex flex-col items-center">
-                  <button
-                    onClick={() => { setActiveLayer(layer.id); document.getElementById(layer.id)?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
-                    className={`w-full max-w-2xl rounded-xl border-2 px-6 py-4 text-left transition-all hover:shadow-md ${c.bg} ${c.border} group`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className={`font-semibold text-sm ${c.text}`}>{layer.label}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{layer.sublabel}</div>
-                      </div>
-                      <ChevronRight className={`h-4 w-4 ${c.text} opacity-0 group-hover:opacity-100 transition-opacity`} />
-                    </div>
-                  </button>
-                  {i < 4 && (
-                    <div className="flex flex-col items-center my-1">
-                      <ArrowDown className="h-4 w-4 text-muted-foreground/50" />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-
-            {/* AI and Auth as side branches */}
-            <div className="w-full max-w-2xl mt-4 grid grid-cols-2 gap-3">
-              {[
-                { id: "ai",   label: "AI Layer",       sublabel: "LLM · Forge API · Server-side only", color: "rose" },
-                { id: "auth", label: "Auth & Roles",   sublabel: "OAuth · JWT · RBAC · 4 role tiers",  color: "slate" },
-              ].map((layer) => {
-                const c = colorMap[layer.color];
-                return (
-                  <button
-                    key={layer.id}
-                    onClick={() => { setActiveLayer(layer.id); document.getElementById(layer.id)?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
-                    className={`rounded-xl border-2 px-5 py-4 text-left transition-all hover:shadow-md ${c.bg} ${c.border} group`}
-                  >
-                    <div className={`font-semibold text-sm ${c.text}`}>{layer.label}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{layer.sublabel}</div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          {/* Animated architecture diagram */}
+          <AnimatedArchDiagram
+            onLayerClick={(id) => {
+              // Map diagram IDs to detail section IDs
+              const idMap: Record<string, string> = {
+                browser: "frontend",
+                trpc: "trpc",
+                express: "backend",
+                engine: "engine",
+                database: "database",
+                ai: "ai",
+              };
+              const sectionId = idMap[id] ?? id;
+              setActiveLayer(sectionId);
+              document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }}
+          />
 
           {/* Data flow summary */}
           <div className="mt-8 pt-6 border-t border-border">

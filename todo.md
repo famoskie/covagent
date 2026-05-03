@@ -70,3 +70,14 @@
 - [x] Add "How It's Built" link to Landing page nav and footer
 - [x] Add "Architecture" nav item to DemoLayout sidebar
 - [x] Checkpoint after TechStack page is complete
+
+## Animated Architecture Diagram
+- [x] AnimatedArchDiagram.tsx: standalone component with hover-triggered data flow animations
+- [x] SVG connector lines between layers with animated stroke-dashoffset flow trace on hover
+- [x] Each layer node: hover lifts with shadow, highlights active color, shows tooltip
+- [x] Hovering a layer highlights all downstream/upstream connectors in the data flow
+- [x] Animated "data packet" dot travelling along the connector path on hover
+- [x] Side branches (AI, Auth) animate in when their parent layer is hovered
+- [x] Auto-play mode: cycles through layers automatically when nothing is hovered
+- [x] Replace static diagram in TechStack.tsx with AnimatedArchDiagram component
+- [x] Checkpoint after animation enhancement is complete
