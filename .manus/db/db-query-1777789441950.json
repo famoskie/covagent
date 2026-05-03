@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO loans (borrowerId, facilityName, facilityAmount, currency, effectiveDate, maturityDate, status) VALUES (1, 'Senior Secured Term Loan A', 25000000.00, 'USD', '2023-01-15 00:00:00', '2028-01-15 00:00:00', 'Active'), (2, 'Revolving Credit Facility', 15000000.00, 'USD', '2022-06-01 00:00:00', '2027-06-01 00:00:00', 'Active'), (3, 'Equipment Finance Facility', 8500000.00, 'USD', '2024-03-01 00:00:00', '2029-03-01 00:00:00', 'Active')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute INSERT INTO loans (borrowerId, facilityName, facilityAmount, currency, effectiveDate, maturityDate, status) VALUES (1, 'Senior Secured Term Loan A', 25000000.00, 'USD', '2023-01-15 00:00:00', '2028-01-15 00:00:00', 'Active'), (2, 'Revolving Credit Facility', 15000000.00, 'USD', '2022-06-01 00:00:00', '2027-06-01 00:00:00', 'Active'), (3, 'Equipment Finance Facility', 8500000.00, 'USD', '2024-03-01 00:00:00', '2029-03-01 00:00:00', 'Active')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 213
+}

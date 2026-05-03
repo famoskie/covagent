@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO covenants (loanId, borrowerId, covenantType, operator, thresholdValue, reportingFrequency, description) VALUES (1, 1, 'DSCR', '>=', 1.2500, 'Quarterly', 'Minimum debt service coverage ratio'), (1, 1, 'Leverage Ratio', '<=', 4.0000, 'Quarterly', 'Maximum total debt to EBITDA'), (2, 2, 'Current Ratio', '>=', 1.1000, 'Quarterly', 'Minimum current ratio'), (2, 2, 'Interest Coverage', '>=', 2.5000, 'Quarterly', 'Minimum interest coverage ratio'), (3, 3, 'DSCR', '>=', 1.3500, 'Semi-Annual', 'Equipment loan DSCR requirement'), (3, 3, 'Debt to EBITDA', '<=', 3.5000, 'Annual', 'Maximum leverage covenant')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute INSERT INTO covenants (loanId, borrowerId, covenantType, operator, thresholdValue, reportingFrequency, description) VALUES (1, 1, 'DSCR', '>=', 1.2500, 'Quarterly', 'Minimum debt service coverage ratio'), (1, 1, 'Leverage Ratio', '<=', 4.0000, 'Quarterly', 'Maximum total debt to EBITDA'), (2, 2, 'Current Ratio', '>=', 1.1000, 'Quarterly', 'Minimum current ratio'), (2, 2, 'Interest Coverage', '>=', 2.5000, 'Quarterly', 'Minimum interest coverage ratio'), (3, 3, 'DSCR', '>=', 1.3500, 'Semi-Annual', 'Equipment loan DSCR requirement'), (3, 3, 'Debt to EBITDA', '<=', 3.5000, 'Annual', 'Maximum leverage covenant')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 202
+}

@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `covenant_results` ( `id` int AUTO_INCREMENT NOT NULL, `submissionId` int NOT NULL, `covenantId` int NOT NULL, `borrowerId` int NOT NULL, `loanId` int NOT NULL, `calculatedValue` decimal(18,4), `thresholdValue` decimal(18,4) NOT NULL, `operator` varchar(4) NOT NULL, `covenantType` varchar(64) NOT NULL, `status` enum('Compliant','Warning','Breach') NOT NULL, `evaluatedAt` timestamp NOT NULL DEFAULT (now()), CONSTRAINT `covenant_results_id` PRIMARY KEY(`id`) )",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute CREATE TABLE `covenant_results` ( `id` int AUTO_INCREMENT NOT NULL, `submissionId` int NOT NULL, `covenantId` int NOT NULL, `borrowerId` int NOT NULL, `loanId` int NOT NULL, `calculatedValue` decimal(18,4), `thresholdValue` decimal(18,4) NOT NULL, `operator` varchar(4) NOT NULL, `covenantType` varchar(64) NOT NULL, `status` enum('Compliant','Warning','Breach') NOT NULL, `evaluatedAt` timestamp NOT NULL DEFAULT (now()), CONSTRAINT `covenant_results_id` PRIMARY KEY(`id`) )",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 116
+}

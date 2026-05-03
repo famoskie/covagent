@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO borrowers (name, industry, riskRating, contactName, contactEmail) VALUES ('Meridian Manufacturing Co.', 'Manufacturing', 'Medium', 'James Harlow', 'j.harlow@meridianmfg.com'), ('Apex Retail Group', 'Retail', 'High', 'Sandra Chen', 's.chen@apexretail.com'), ('BlueSky Logistics LLC', 'Logistics', 'Low', 'Marcus Webb', 'm.webb@blueskylog.com')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute INSERT INTO borrowers (name, industry, riskRating, contactName, contactEmail) VALUES ('Meridian Manufacturing Co.', 'Manufacturing', 'Medium', 'James Harlow', 'j.harlow@meridianmfg.com'), ('Apex Retail Group', 'Retail', 'High', 'Sandra Chen', 's.chen@apexretail.com'), ('BlueSky Logistics LLC', 'Logistics', 'Low', 'Marcus Webb', 'm.webb@blueskylog.com')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 88
+}

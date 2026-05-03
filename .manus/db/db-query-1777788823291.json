@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `alerts` ( `id` int AUTO_INCREMENT NOT NULL, `covenantResultId` int NOT NULL, `borrowerId` int NOT NULL, `loanId` int NOT NULL, `covenantType` varchar(64) NOT NULL, `severity` enum('Warning','Breach') NOT NULL, `message` text NOT NULL, `isRead` int NOT NULL DEFAULT 0, `createdAt` timestamp NOT NULL DEFAULT (now()), CONSTRAINT `alerts_id` PRIMARY KEY(`id`) )",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute CREATE TABLE `alerts` ( `id` int AUTO_INCREMENT NOT NULL, `covenantResultId` int NOT NULL, `borrowerId` int NOT NULL, `loanId` int NOT NULL, `covenantType` varchar(64) NOT NULL, `severity` enum('Warning','Breach') NOT NULL, `message` text NOT NULL, `isRead` int NOT NULL DEFAULT 0, `createdAt` timestamp NOT NULL DEFAULT (now()), CONSTRAINT `alerts_id` PRIMARY KEY(`id`) )",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 901
+}

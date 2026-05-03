@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `loans` ( `id` int AUTO_INCREMENT NOT NULL, `borrowerId` int NOT NULL, `facilityName` varchar(255) NOT NULL, `facilityAmount` decimal(18,2) NOT NULL, `currency` varchar(8) NOT NULL DEFAULT 'USD', `effectiveDate` timestamp NOT NULL, `maturityDate` timestamp NOT NULL, `status` enum('Active','Closed','Defaulted') NOT NULL DEFAULT 'Active', `createdAt` timestamp NOT NULL DEFAULT (now()), `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP, CONSTRAINT `loans_id` PRIMARY KEY(`id`) )",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute CREATE TABLE `loans` ( `id` int AUTO_INCREMENT NOT NULL, `borrowerId` int NOT NULL, `facilityName` varchar(255) NOT NULL, `facilityAmount` decimal(18,2) NOT NULL, `currency` varchar(8) NOT NULL DEFAULT 'USD', `effectiveDate` timestamp NOT NULL, `maturityDate` timestamp NOT NULL, `status` enum('Active','Closed','Defaulted') NOT NULL DEFAULT 'Active', `createdAt` timestamp NOT NULL DEFAULT (now()), `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP, CONSTRAINT `loans_id` PRIMARY KEY(`id`) )",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 111
+}

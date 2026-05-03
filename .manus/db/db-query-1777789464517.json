@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO covenant_results (submissionId, covenantId, borrowerId, loanId, calculatedValue, thresholdValue, operator, covenantType, status) VALUES (1, 1, 1, 1, 1.2258, 1.2500, '>=', 'DSCR', 'Warning'), (1, 2, 1, 1, 4.0000, 4.0000, '<=', 'Leverage Ratio', 'Compliant'), (2, 3, 2, 2, 1.0690, 1.1000, '>=', 'Current Ratio', 'Breach'), (2, 4, 2, 2, 2.4000, 2.5000, '>=', 'Interest Coverage', 'Warning'), (3, 5, 3, 3, 1.3659, 1.3500, '>=', 'DSCR', 'Compliant'), (3, 6, 3, 3, 3.5000, 3.5000, '<=', 'Debt to EBITDA', 'Compliant')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute INSERT INTO covenant_results (submissionId, covenantId, borrowerId, loanId, calculatedValue, thresholdValue, operator, covenantType, status) VALUES (1, 1, 1, 1, 1.2258, 1.2500, '>=', 'DSCR', 'Warning'), (1, 2, 1, 1, 4.0000, 4.0000, '<=', 'Leverage Ratio', 'Compliant'), (2, 3, 2, 2, 1.0690, 1.1000, '>=', 'Current Ratio', 'Breach'), (2, 4, 2, 2, 2.4000, 2.5000, '>=', 'Interest Coverage', 'Warning'), (3, 5, 3, 3, 1.3659, 1.3500, '>=', 'DSCR', 'Compliant'), (3, 6, 3, 3, 3.5000, 3.5000, '<=', 'Debt to EBITDA', 'Compliant')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 62
+}

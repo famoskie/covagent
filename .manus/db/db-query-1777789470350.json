@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO alerts (covenantResultId, borrowerId, loanId, covenantType, severity, message) VALUES (1, 1, 1, 'DSCR', 'Warning', 'WARNING: Meridian Manufacturing Co. is near breach on DSCR. Required: >= 1.25. Actual: 1.2258.'), (3, 2, 2, 'Current Ratio', 'Breach', 'BREACH: Apex Retail Group failed Current Ratio covenant. Required: >= 1.10. Actual: 1.0690.'), (4, 2, 2, 'Interest Coverage', 'Warning', 'WARNING: Apex Retail Group is near breach on Interest Coverage. Required: >= 2.50. Actual: 2.4000.')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute INSERT INTO alerts (covenantResultId, borrowerId, loanId, covenantType, severity, message) VALUES (1, 1, 1, 'DSCR', 'Warning', 'WARNING: Meridian Manufacturing Co. is near breach on DSCR. Required: >= 1.25. Actual: 1.2258.'), (3, 2, 2, 'Current Ratio', 'Breach', 'BREACH: Apex Retail Group failed Current Ratio covenant. Required: >= 1.10. Actual: 1.0690.'), (4, 2, 2, 'Interest Coverage', 'Warning', 'WARNING: Apex Retail Group is near breach on Interest Coverage. Required: >= 2.50. Actual: 2.4000.')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 62
+}

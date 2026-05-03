@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `borrowers` ( `id` int AUTO_INCREMENT NOT NULL, `name` varchar(255) NOT NULL, `industry` varchar(128), `riskRating` enum('Low','Medium','High','Watch') NOT NULL DEFAULT 'Medium', `contactName` varchar(255), `contactEmail` varchar(320), `createdAt` timestamp NOT NULL DEFAULT (now()), `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP, CONSTRAINT `borrowers_id` PRIMARY KEY(`id`) )",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3EWDCR8EhFN8ZDJ.e69d9e01855e --database SDuMnSFxqJmuGob2HGCUkZ --execute CREATE TABLE `borrowers` ( `id` int AUTO_INCREMENT NOT NULL, `name` varchar(255) NOT NULL, `industry` varchar(128), `riskRating` enum('Low','Medium','High','Watch') NOT NULL DEFAULT 'Medium', `contactName` varchar(255), `contactEmail` varchar(320), `createdAt` timestamp NOT NULL DEFAULT (now()), `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP, CONSTRAINT `borrowers_id` PRIMARY KEY(`id`) )",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 220
+}
