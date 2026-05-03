@@ -194,8 +194,10 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
     return () => { if (autoRef.current) clearInterval(autoRef.current); };
   }, [hovered]);
 
-  const activeId = hovered ?? mainIds[autoIdx];
-  const activeLayer = LAYERS.find((l) => l.id === activeId)!;
+  // Treat 'auth-note' as a non-layer hover — fall back to auto-play layer
+  const resolvedHovered = hovered === "auth-note" ? null : hovered;
+  const activeId = resolvedHovered ?? mainIds[autoIdx % mainIds.length];
+  const activeLayer = LAYERS.find((l) => l.id === activeId) ?? LAYERS[0];
 
   // Which connectors are "active" (downstream from the hovered node)
   function isConnectorActive(c: ConnectorDef): boolean {
@@ -303,7 +305,7 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
                         dy={isActive ? 4 : 1}
                         stdDeviation={isActive ? 8 : 2}
                         floodColor={layer.hex}
-                        floodOpacity={isActive ? 0.25 : 0.08}
+                        floodOpacity={isActive ? 0.2 : 0.06}
                       />
                     </filter>
                   </defs>
@@ -372,7 +374,8 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
                     x={pos.x + 18}
                     y={isActive ? pos.y - 2 + NODE_H / 2 + 10 : pos.y + NODE_H / 2 + 10}
                     fontSize={9.5}
-                    fill={isActive ? layer.hex + "cc" : dimmed ? "#cbd5e1" : "#64748b"}
+                    fill={isActive ? layer.hex : dimmed ? "#cbd5e1" : "#64748b"}
+                    opacity={isActive ? 0.75 : 1}
                     fontFamily="Inter, sans-serif"
                     style={{ transition: "fill 0.25s" }}
                   >
