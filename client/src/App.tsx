@@ -24,6 +24,7 @@ import DemoPortfolio from "./pages/DemoPortfolio";
 import DemoBorrowers from "./pages/DemoBorrowers";
 import DemoBorrowerDetail from "./pages/DemoBorrowerDetail";
 import DemoAlerts from "./pages/DemoAlerts";
+import TechStack from "./pages/TechStack";
 
 function Router() {
   const { user, loading } = useAuth();
@@ -38,6 +39,7 @@ function Router() {
           <Route path="/demo/borrowers/:id" component={DemoBorrowerDetail} />
           <Route path="/demo/borrowers" component={DemoBorrowers} />
           <Route path="/demo/alerts" component={DemoAlerts} />
+          <Route path="/tech-stack" component={TechStack} />
           {/* Redirect any other path to demo dashboard */}
           <Route>{() => { window.location.replace("/dashboard"); return null; }}</Route>
         </Switch>
@@ -50,6 +52,7 @@ function Router() {
     return (
       <Switch>
         <Route path="/" component={Landing} />
+        <Route path="/tech-stack" component={TechStack} />
         {/* Allow /dashboard to enter demo mode from direct link */}
         <Route path="/dashboard">{() => { window.location.replace("/"); return null; }}</Route>
         <Route component={Landing} />
@@ -77,6 +80,7 @@ function Router() {
         <Route path="/alerts" component={AlertsFeed} />
         <Route path="/covenants" component={CovenantConfig} />
         <Route path="/admin/users" component={UserManagement} />
+        <Route path="/tech-stack" component={TechStack} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>

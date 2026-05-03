@@ -21,6 +21,7 @@ import { useIsMobile } from "@/hooks/useMobile";
 import {
   AlertTriangle,
   Building2,
+  Code2,
   LayoutDashboard,
   LogIn,
   PanelLeft,
@@ -33,6 +34,7 @@ const demoNavItems = [
   { icon: LayoutDashboard, label: "Portfolio", path: "/dashboard" },
   { icon: Building2, label: "Borrowers", path: "/demo/borrowers" },
   { icon: AlertTriangle, label: "Alerts", path: "/demo/alerts" },
+  { icon: Code2, label: "How It's Built", path: "/tech-stack" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "demo-sidebar-width";

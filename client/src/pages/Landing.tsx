@@ -73,12 +73,18 @@ export default function Landing() {
             <span className="font-bold text-lg tracking-tight">CovAgent</span>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleTryDemo}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
-            >
-              Try Demo
-            </button>
+          <button
+            onClick={() => setLocation("/tech-stack")}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
+          >
+            How It's Built
+          </button>
+          <button
+            onClick={handleTryDemo}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
+          >
+            Try Demo
+          </button>
             <a
               href={getLoginUrl()}
               className="text-sm bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity"

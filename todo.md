@@ -59,3 +59,14 @@
 - [x] App.tsx: / shows landing page for unauthenticated, dashboard for authenticated or demo mode
 - [x] Vitest: demo mode context and public procedure tests
 - [x] Checkpoint: save after demo mode is complete
+
+## Technology & Architecture Page
+- [x] TechStack.tsx: public page at /tech-stack accessible without login
+- [x] Interactive architecture diagram showing all layers (Browser → React → tRPC → Express → Drizzle → MySQL)
+- [x] Layer-by-layer breakdown cards: Frontend, API, Backend Logic, Database, AI, Auth
+- [x] PM Skills Map section: which skill each technology demonstrates
+- [x] AI Explainability section: how the LLM is prompted, what it receives, what it returns
+- [x] Covenant Engine explainer: how ratios are calculated and evaluated step by step
+- [x] Add "How It's Built" link to Landing page nav and footer
+- [x] Add "Architecture" nav item to DemoLayout sidebar
+- [x] Checkpoint after TechStack page is complete
