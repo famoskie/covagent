@@ -20,8 +20,8 @@ import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import {
   AlertTriangle,
+  Brain,
   Building2,
-  Code2,
   LayoutDashboard,
   LogIn,
   PanelLeft,
@@ -32,11 +32,11 @@ import { CSSProperties, useState } from "react";
 import { useLocation } from "wouter";
 
 const demoNavItems = [
+  { icon: Zap, label: "Try It Live", path: "/demo/try", highlight: true },
   { icon: LayoutDashboard, label: "Portfolio", path: "/dashboard" },
   { icon: Building2, label: "Borrowers", path: "/demo/borrowers" },
   { icon: AlertTriangle, label: "Alerts", path: "/demo/alerts" },
-  { icon: Code2, label: "How the AI Works", path: "/tech-stack" },
-  { icon: Zap, label: "Try It Live", path: "/demo/try", highlight: true },
+  { icon: Brain, label: "How the AI Works", path: "/tech-stack" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "demo-sidebar-width";

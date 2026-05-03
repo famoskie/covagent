@@ -118,11 +118,12 @@ export function determineStatus(
 export async function runCovenantEvaluation(
   submission: FinancialSubmission,
   borrowerName: string
-): Promise<{ results: Array<{ covenantId: number; status: string; calculatedValue: number | null }>; breachCount: number; warningCount: number }> {
+): Promise<{ results: Array<{ covenantId: number; covenantType: string; status: string; calculatedValue: number | null }>; breachCount: number; warningCount: number }> {
   const covenantList = await listCovenantsByBorrower(submission.borrowerId);
 
   const resultSummary: Array<{
     covenantId: number;
+    covenantType: string;
     status: string;
     calculatedValue: number | null;
   }> = [];
@@ -183,7 +184,7 @@ export async function runCovenantEvaluation(
       }
     }
 
-    resultSummary.push({ covenantId: covenant.id, status, calculatedValue });
+    resultSummary.push({ covenantId: covenant.id, covenantType: covenant.covenantType, status, calculatedValue });
   }
 
   return { results: resultSummary, breachCount, warningCount };

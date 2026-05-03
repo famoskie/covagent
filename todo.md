@@ -111,3 +111,18 @@
 - [x] Portfolio.tsx: admin-only "Reset Demo Data" button with confirmation and toast feedback
 - [x] Landing.tsx: add "Run the AI Pipeline →" secondary CTA button linking to /demo/try
 - [x] Checkpoint after all follow-ups complete
+
+## QA Fixes (End-to-End Audit)
+- [x] Fix #1: Per-covenant results show "Covenant #5" — display covenant type name instead
+- [x] Fix #2: Landing page subtext "Read-only access" is wrong — update to reflect interactive demo
+- [x] Fix #3: "Sign In to Your Account" button on landing — demote to subtle text link
+- [x] Fix #4: Demo Portfolio dashboard missing page heading — add "Portfolio Overview" title
+- [x] Fix #5: "CCO Dashboard" badge is jargon — replace with "Live Demo" badge
+- [x] Fix #6: DemoBanner slim down — reduce height, make it less intrusive
+- [x] Fix #7: "Try It Live" should be first/highlighted nav item in DemoLayout
+- [x] Fix #8: Add "Try It Live" nudge card on DemoBorrowerDetail page
+- [x] Fix #9: DashboardLayout "How the AI Works" uses Code2 icon — change to Brain icon
+- [x] Fix #10: DemoLayout "How the AI Works" uses Code2 icon — change to Brain icon
+- [x] Fix #11: "Back to Portfolio" on Try It Live — rename to "Back to Dashboard"
+- [x] Fix #12: Pre-select "Covenant Breach" scenario by default on Try It Live
+- [x] Checkpoint after QA fixes

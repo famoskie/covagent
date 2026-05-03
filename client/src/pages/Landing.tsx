@@ -139,7 +139,7 @@ export default function Landing() {
         </div>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          No account required · Explore the dashboard or run the AI pipeline live
+          No account required · No email needed · Explore or run the AI pipeline live
         </p>
       </section>
 

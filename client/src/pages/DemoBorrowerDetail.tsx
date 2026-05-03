@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   FileText,
   XCircle,
+  Zap,
 } from "lucide-react";
 import {
   CartesianGrid,
@@ -139,6 +140,24 @@ export default function DemoBorrowerDetail() {
             <div className="text-xs text-muted-foreground mt-0.5">Submissions</div>
           </div>
         </div>
+      </div>
+
+      {/* Try It Live nudge */}
+      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <Zap className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-foreground">Want to see the AI pipeline run live?</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Submit a financial statement and watch the covenant engine evaluate it in real time.</p>
+          </div>
+        </div>
+        <button
+          onClick={() => setLocation("/demo/try")}
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition-all shrink-0 whitespace-nowrap"
+        >
+          <Zap className="h-3.5 w-3.5" />
+          Try It Live
+        </button>
       </div>
 
       <Tabs defaultValue="covenants">

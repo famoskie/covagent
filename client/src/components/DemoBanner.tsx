@@ -17,18 +17,18 @@ export default function DemoBanner() {
   };
 
   return (
-    <div className="sticky top-0 z-50 bg-primary/90 backdrop-blur text-primary-foreground text-sm px-4 py-2.5 flex items-center justify-between gap-4 shadow-lg">
+    <div className="sticky top-0 z-50 bg-slate-800/95 backdrop-blur text-white text-xs px-4 py-2 flex items-center justify-between gap-4 border-b border-slate-700">
       <div className="flex items-center gap-2.5 min-w-0">
         <Eye className="h-4 w-4 shrink-0" />
         <span className="font-medium">Demo Mode</span>
-        <span className="text-primary-foreground/70 hidden sm:inline">
-          — You're in interactive demo mode. Submit financials and generate AI narratives freely.
+        <span className="text-slate-300 hidden sm:inline">
+          — Interactive demo. No login needed. Submit financials &amp; generate AI narratives.
         </span>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <a
+          <a
           href={getLoginUrl()}
-          className="flex items-center gap-1.5 bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors text-primary-foreground text-xs font-medium px-3 py-1.5 rounded-lg"
+          className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 transition-colors text-white text-xs font-medium px-3 py-1.5 rounded-lg"
         >
           <LogIn className="h-3.5 w-3.5" />
           Sign In

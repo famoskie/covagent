@@ -55,6 +55,7 @@ export default function DemoPortfolio() {
 
   return (
     <div className="space-y-6">
+      {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground tracking-tight">Portfolio Overview</h1>
@@ -62,12 +63,13 @@ export default function DemoPortfolio() {
             Real-time covenant compliance across all active borrowers
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground bg-card border border-border rounded-lg px-3 py-2">
-          <Shield className="h-3.5 w-3.5 text-primary" />
-          <span>CCO Dashboard</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-xs font-medium bg-primary/10 text-primary border border-primary/20 rounded-lg px-3 py-2">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            <span>Live Demo</span>
+          </div>
         </div>
       </div>
-
       {/* Metric cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard icon={<FileText className="h-5 w-5 text-blue-400" />} label="Active Loans" value={data?.totalLoans ?? 0} color="blue" />

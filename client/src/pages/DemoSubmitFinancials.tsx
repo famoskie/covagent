@@ -121,7 +121,7 @@ const statusBadge = (s: string) => {
 export default function DemoSubmitFinancials() {
   const [, setLocation] = useLocation();
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [selectedScenario, setSelectedScenario] = useState<number | null>(null);
+  const [selectedScenario, setSelectedScenario] = useState<number | null>(2); // Pre-select Covenant Breach for maximum impact
   const [evalResult, setEvalResult] = useState<EvalResult | null>(null);
   const [narrative, setNarrative] = useState<string | null>(null);
   const [narrativeLoading, setNarrativeLoading] = useState(false);
@@ -185,7 +185,7 @@ export default function DemoSubmitFinancials() {
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Portfolio
+          Back to Dashboard
         </button>
         <div className="flex items-center gap-3 mb-1">
           <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
@@ -390,7 +390,11 @@ export default function DemoSubmitFinancials() {
                 <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Per-Covenant Results</div>
                 {evalResult.evaluationSummary.results.map((r) => (
                   <div key={r.covenantId} className="flex items-center justify-between text-sm p-3 bg-slate-50 rounded-lg">
-                    <span className="text-muted-foreground text-xs">Covenant #{r.covenantId}</span>
+                    <div>
+                      <span className="font-medium text-foreground text-xs">
+                        {(r as { covenantType?: string }).covenantType ?? `Covenant #${r.covenantId}`}
+                      </span>
+                    </div>
                     <div className="flex items-center gap-3">
                       {r.calculatedValue !== null && (
                         <span className="font-mono text-foreground font-medium">{r.calculatedValue.toFixed(3)}x</span>
