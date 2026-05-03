@@ -1,5 +1,6 @@
 import { getLoginUrl } from "@/const";
 import { useDemo } from "@/contexts/DemoContext";
+import ProductPreview from "@/components/ProductPreview";
 import {
   AlertTriangle,
   BarChart3,
@@ -136,6 +137,32 @@ export default function Landing() {
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
           No account required · No email needed
+        </p>
+      </section>
+
+      {/* Product Preview */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 pb-10 sm:pb-14">
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/15 rounded-full px-3 py-1 text-xs text-primary font-medium mb-3">
+            <Zap className="h-3 w-3" />
+            Live Preview
+          </div>
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+            Watch the agentic pipeline in action
+          </h2>
+          <p className="text-sm text-muted-foreground mt-2">
+            Portfolio → Covenant Engine → Breach Alert → AI Narrative — auto-cycling every few seconds.
+          </p>
+        </div>
+        <ProductPreview />
+        <p className="text-center mt-4 text-xs text-muted-foreground">
+          Click any dot to jump to that step, or{" "}
+          <button
+            onClick={() => { enterDemo(); setLocation("/demo/try"); }}
+            className="text-primary font-medium hover:underline"
+          >
+            run it yourself →
+          </button>
         </p>
       </section>
 
