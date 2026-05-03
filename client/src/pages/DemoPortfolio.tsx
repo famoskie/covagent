@@ -54,7 +54,7 @@ export default function DemoPortfolio() {
     : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
@@ -94,7 +94,7 @@ export default function DemoPortfolio() {
               <p className="text-sm text-muted-foreground">No borrowers yet</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-0">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">

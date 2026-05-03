@@ -131,3 +131,17 @@
 - [x] DemoSubmitFinancials: "What you just saw" explainer card after AI narrative
 - [x] Landing page: personal footer with Olu Oso name and LinkedIn link
 - [x] Checkpoint after final polish
+
+## Mobile Responsiveness
+- [x] Landing: compact hero (smaller headline, stacked CTAs, shorter description)
+- [x] Landing: features grid 1-col on mobile, stats bar 2x2 grid
+- [x] Landing: footer stacks cleanly on mobile
+- [x] DemoPortfolio: borrower table scrolls horizontally, metric cards 2x2
+- [x] DemoBorrowerDetail: header stacks, quick stats 3-col stays compact
+- [x] DemoBorrowerDetail: tabs scroll horizontally on mobile
+- [x] DemoAlerts: summary cards 3-col → 1-col on mobile
+- [x] DemoSubmitFinancials: scenario cards compact, step indicator readable
+- [x] TechStack: section padding reduced, formula cards full-width
+- [x] DemoLayout: sidebar collapses to sheet on mobile (already handled by shadcn)
+- [x] Global: ensure p-6 padding reduces to p-4 on mobile across all demo pages
+- [x] Checkpoint after mobile fixes

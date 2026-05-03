@@ -138,7 +138,7 @@ function DemoLayoutContent({ children, setSidebarWidth }: { children: React.Reac
             </div>
           </div>
         )}
-        <main className="flex-1 p-6 min-h-screen">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 min-h-screen">{children}</main>
       </SidebarInset>
     </>
   );

@@ -272,7 +272,7 @@ export default function DemoSubmitFinancials() {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 max-w-3xl mx-auto">
       {/* Header */}
       <div>
         <button
@@ -335,10 +335,10 @@ export default function DemoSubmitFinancials() {
                     : "border-border bg-white hover:border-primary/40"
                 }`}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="flex items-center gap-3 mb-1.5">
-                      <span className="font-bold text-foreground">{s.label}</span>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="font-bold text-foreground text-sm">{s.label}</span>
                       <span className={statusBadge(s.expectedOutcome)}>{s.expectedOutcome}</span>
                     </div>
                     <p className="text-sm text-muted-foreground">{s.description}</p>

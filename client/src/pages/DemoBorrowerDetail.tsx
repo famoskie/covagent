@@ -93,7 +93,7 @@ export default function DemoBorrowerDetail() {
   const overallStatus = hasBreaches ? "Breach" : hasWarnings ? "Warning" : "Compliant";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <button
         onClick={() => setLocation("/dashboard")}
         className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -103,11 +103,11 @@ export default function DemoBorrowerDetail() {
       </button>
 
       {/* Header */}
-      <div className="bg-card border border-border rounded-xl p-6">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="h-12 w-12 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
-              <Building2 className="h-6 w-6 text-primary" />
+      <div className="bg-card border border-border rounded-xl p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+          <div className="flex items-start gap-3">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground tracking-tight">{borrower.name}</h1>
@@ -161,7 +161,7 @@ export default function DemoBorrowerDetail() {
       </div>
 
       <Tabs defaultValue="covenants">
-        <TabsList className="bg-card border border-border">
+        <TabsList className="bg-card border border-border w-full overflow-x-auto">
           <TabsTrigger value="covenants">Covenants</TabsTrigger>
           <TabsTrigger value="history">Compliance History</TabsTrigger>
           <TabsTrigger value="trends">Trend Charts</TabsTrigger>

@@ -197,15 +197,15 @@ export default function TechStack() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-6 pt-16 pb-12 text-center">
-        <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-200 rounded-full px-4 py-1.5 text-xs text-rose-700 font-medium mb-6">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-12 text-center">
+        <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-200 rounded-full px-3 py-1 text-xs text-rose-700 font-medium mb-4 sm:mb-6">
           <Bot className="h-3.5 w-3.5" />
           How the Agentic AI Works
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground leading-tight max-w-3xl mx-auto">
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground leading-tight max-w-3xl mx-auto">
           The AI behind CovAgent — explained plainly
         </h1>
-        <p className="mt-5 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-3 sm:mt-5 text-sm sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           CovAgent uses two distinct AI components: a <strong className="text-foreground">deterministic rule engine</strong> that calculates financial ratios and evaluates covenants, and a <strong className="text-foreground">language model</strong> that translates those results into plain English for Relationship Managers. This page explains exactly how both work.
         </p>
       </section>
