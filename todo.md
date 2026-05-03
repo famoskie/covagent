@@ -126,3 +126,8 @@
 - [x] Fix #11: "Back to Portfolio" on Try It Live — rename to "Back to Dashboard"
 - [x] Fix #12: Pre-select "Covenant Breach" scenario by default on Try It Live
 - [x] Checkpoint after QA fixes
+
+## Final Polish
+- [x] DemoSubmitFinancials: "What you just saw" explainer card after AI narrative
+- [x] Landing page: personal footer with Olu Oso name and LinkedIn link
+- [x] Checkpoint after final polish

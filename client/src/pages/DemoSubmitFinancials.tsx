@@ -18,7 +18,9 @@ import {
   Bot,
   Brain,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
+  ChevronUp,
   Sparkles,
   TrendingDown,
   XCircle,
@@ -27,6 +29,99 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
+
+// ─── What You Just Saw Explainer ─────────────────────────────────────────────
+
+type WhatYouJustSawProps = {
+  evalResult: EvalResult;
+  scenario: typeof SCENARIOS[number] | null;
+};
+
+function WhatYouJustSaw({ evalResult, scenario }: WhatYouJustSawProps) {
+  const [open, setOpen] = useState(false);
+
+  const steps = [
+    {
+      n: "1",
+      color: "#6366f1",
+      title: "Financial data submitted",
+      detail: `You submitted ${scenario?.values.periodLabel ?? "Q1 2025"} financials for ${scenario?.label ?? "the borrower"} — EBITDA, total debt, cash flow, and more.`,
+    },
+    {
+      n: "2",
+      color: "#f59e0b",
+      title: "Covenant engine calculated the ratios",
+      detail: evalResult.evaluationSummary.results
+        .map((r) => {
+          const type = (r as { covenantType?: string }).covenantType ?? `Covenant #${r.covenantId}`;
+          const val = r.calculatedValue !== null ? r.calculatedValue.toFixed(3) : "N/A";
+          return `${type} = ${val}x → ${r.status}`;
+        })
+        .join(" · "),
+    },
+    {
+      n: "3",
+      color: "#f43f5e",
+      title: `${evalResult.evaluationSummary.breachCount} breach${evalResult.evaluationSummary.breachCount !== 1 ? "es" : ""} detected automatically`,
+      detail: `The engine compared each calculated value against the covenant threshold using the configured operator (≥, ≤). Values outside the threshold were classified as Breach. Values within 10% of the threshold were flagged as Warning.`,
+    },
+    {
+      n: "4",
+      color: "#10b981",
+      title: "LLM translated results into plain English",
+      detail: `The server assembled a structured prompt from the evaluation results and sent it to the language model. The model wrote a 3–4 sentence summary for a Relationship Manager — no jargon, no raw numbers, just context.`,
+    },
+  ];
+
+  return (
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-slate-100 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="h-7 w-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
+            <Sparkles className="h-3.5 w-3.5 text-slate-600" />
+          </div>
+          <div>
+            <span className="font-semibold text-foreground text-sm">What you just saw — explained</span>
+            <span className="text-xs text-muted-foreground ml-2">How the agentic AI pipeline worked step by step</span>
+          </div>
+        </div>
+        {open ? <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" /> : <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />}
+      </button>
+
+      {open && (
+        <div className="px-6 pb-6 space-y-4 border-t border-slate-200 pt-5">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            When you clicked Submit, four things happened automatically — no manual trigger, no human in the loop until the AI narrative step.
+          </p>
+          <div className="space-y-3">
+            {steps.map((s) => (
+              <div key={s.n} className="flex items-start gap-4">
+                <div
+                  className="h-7 w-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 mt-0.5"
+                  style={{ backgroundColor: s.color }}
+                >
+                  {s.n}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-foreground text-sm">{s.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{s.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="bg-white border border-slate-200 rounded-xl p-4 mt-4">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              <strong className="text-foreground">Why this matters for PMs:</strong> Steps 1–3 are fully deterministic — the same inputs always produce the same outputs. Step 4 is the only AI component, and it only runs when a human asks for it. This separation of concerns (rule engine vs. LLM) is a deliberate product decision that makes the system auditable and the AI explainable.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // Pre-filled scenario presets to make the demo compelling
 const SCENARIOS = [
@@ -451,6 +546,9 @@ export default function DemoSubmitFinancials() {
               )}
             </div>
           </div>
+
+          {/* What You Just Saw explainer */}
+          <WhatYouJustSaw evalResult={evalResult} scenario={scenario} />
 
           {/* Action buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
