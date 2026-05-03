@@ -11,6 +11,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { useIsMobile } from "@/hooks/useMobile";
 
 // ─── Layer definitions ────────────────────────────────────────────────────────
 
@@ -138,10 +139,14 @@ type Props = {
 export default function AnimatedArchDiagram({ onLayerClick }: Props) {
   const [hovered, setHovered] = useState<string | null>(null);
   const [autoIdx, setAutoIdx] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const autoRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const playRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isMobile = useIsMobile();
 
+  // Idle auto-play (slow)
   useEffect(() => {
-    if (hovered) {
+    if (hovered || isPlaying) {
       if (autoRef.current) clearInterval(autoRef.current);
       return;
     }
@@ -149,7 +154,35 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
       setAutoIdx((i) => (i + 1) % MAIN_IDS.length);
     }, 2400);
     return () => { if (autoRef.current) clearInterval(autoRef.current); };
-  }, [hovered]);
+  }, [hovered, isPlaying]);
+
+  // Play Full Flow: fast sequential animation through all layers
+  const handlePlayFullFlow = () => {
+    if (isPlaying) {
+      if (playRef.current) clearInterval(playRef.current);
+      setIsPlaying(false);
+      setAutoIdx(0);
+      return;
+    }
+    setIsPlaying(true);
+    setAutoIdx(0);
+    let step = 0;
+    playRef.current = setInterval(() => {
+      step++;
+      if (step >= MAIN_IDS.length) {
+        if (playRef.current) clearInterval(playRef.current);
+        setIsPlaying(false);
+        setAutoIdx(0);
+        return;
+      }
+      setAutoIdx(step);
+    }, 900);
+  };
+
+  // Cleanup play interval on unmount
+  useEffect(() => {
+    return () => { if (playRef.current) clearInterval(playRef.current); };
+  }, []);
 
   const activeId = hovered ?? MAIN_IDS[autoIdx % MAIN_IDS.length];
   const allLayers = [...LAYERS, AI_LAYER, AUTH_LAYER];
@@ -173,6 +206,59 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
 
   return (
     <div className="w-full">
+      {/* Flowing dash animation keyframes */}
+      <style>{`
+        @keyframes flowDash {
+          from { stroke-dashoffset: 20; }
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes flowDown {
+          0% { background-position: 0 0; }
+          100% { background-position: 0 20px; }
+        }
+        .connector-active {
+          background-image: repeating-linear-gradient(
+            to bottom,
+            var(--connector-color) 0px,
+            var(--connector-color) 6px,
+            transparent 6px,
+            transparent 10px
+          );
+          animation: flowDown 0.6s linear infinite;
+        }
+      `}</style>
+
+      {/* Play Full Flow button + mobile hint */}
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-xs text-slate-400 sm:hidden">
+          👆 Tap any layer to trace the data flow
+        </p>
+        <div className="ml-auto">
+          <button
+            onClick={handlePlayFullFlow}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold border-2 transition-all ${
+              isPlaying
+                ? "bg-primary text-primary-foreground border-primary shadow-md"
+                : "bg-white text-slate-600 border-slate-200 hover:border-primary/40 hover:text-primary"
+            }`}
+          >
+            {isPlaying ? (
+              <>
+                <span className="h-2 w-2 rounded-full bg-white animate-pulse inline-block" />
+                Playing…
+              </>
+            ) : (
+              <>
+                <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Play Full Flow
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
       <div className="flex flex-col lg:flex-row gap-6 items-start">
 
         {/* ── Flow diagram ── */}
@@ -227,42 +313,50 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
                     <div className="flex items-start">
                       {/* Main vertical connector */}
                       <div className="flex flex-col items-center" style={{ width: 60, marginLeft: 24 }}>
-                        <div
-                          className="w-0.5 transition-all duration-300"
-                          style={{
-                            height: isBranchPoint ? 0 : 28,
-                            backgroundColor: active ? layer.color : "#e2e8f0",
-                          }}
-                        />
-                        {/* Flow label */}
-                        {layer.flowLabel && active && (
+                      {/* Flowing connector line */}
                           <div
-                            className="text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
-                            style={{ color: layer.color, backgroundColor: layer.color + "15", border: `1px solid ${layer.color}30` }}
-                          >
-                            {layer.flowLabel}
-                          </div>
-                        )}
-                        {!isBranchPoint && (
-                          <div
-                            className="w-0.5 transition-all duration-300"
+                            className={active ? "connector-active" : ""}
                             style={{
-                              height: layer.flowLabel && active ? 8 : 28,
-                              backgroundColor: active ? layer.color : "#e2e8f0",
-                            }}
+                              width: 2,
+                              height: isBranchPoint ? 0 : 28,
+                              backgroundColor: active ? "transparent" : "#e2e8f0",
+                              // @ts-ignore
+                              "--connector-color": layer.color,
+                              transition: "height 0.3s",
+                            } as React.CSSProperties}
                           />
-                        )}
-                        {/* Arrow head */}
-                        {!isBranchPoint && (
-                          <div
-                            className="w-0 h-0 transition-all duration-300"
-                            style={{
-                              borderLeft: "5px solid transparent",
-                              borderRight: "5px solid transparent",
-                              borderTop: `7px solid ${active ? layer.color : "#e2e8f0"}`,
-                            }}
-                          />
-                        )}
+                          {/* Flow label */}
+                          {layer.flowLabel && active && (
+                            <div
+                              className="text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+                              style={{ color: layer.color, backgroundColor: layer.color + "15", border: `1px solid ${layer.color}30` }}
+                            >
+                              {layer.flowLabel}
+                            </div>
+                          )}
+                          {!isBranchPoint && (
+                            <div
+                              className={active ? "connector-active" : ""}
+                              style={{
+                                width: 2,
+                                height: layer.flowLabel && active ? 8 : 28,
+                                backgroundColor: active ? "transparent" : "#e2e8f0",
+                                // @ts-ignore
+                                "--connector-color": layer.color,
+                              } as React.CSSProperties}
+                            />
+                          )}
+                          {/* Arrow head */}
+                          {!isBranchPoint && (
+                            <div
+                              className="w-0 h-0 transition-all duration-300"
+                              style={{
+                                borderLeft: "5px solid transparent",
+                                borderRight: "5px solid transparent",
+                                borderTop: `7px solid ${active ? layer.color : "#e2e8f0"}`,
+                              }}
+                            />
+                          )}
                       </div>
 
                       {/* Branch connectors for engine → database + ai */}
@@ -445,8 +539,8 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
           </div>
 
           <p className="text-xs text-slate-400 text-center mt-3 leading-relaxed">
-            Hover any layer to trace the data flow.
-            <br />Auto-playing when idle.
+            {isMobile ? "Tap" : "Hover"} any layer to trace the data flow.
+            <br />Or click <strong className="text-slate-500">Play Full Flow</strong> to watch it run.
           </p>
 
           {/* Quick nav pills */}
