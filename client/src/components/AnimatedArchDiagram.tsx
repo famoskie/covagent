@@ -1,14 +1,13 @@
 /**
- * AnimatedArchDiagram
+ * AnimatedArchDiagram — CSS-only interactive flow diagram
  *
- * An interactive SVG-based architecture diagram for the TechStack page.
- * Hovering a layer node:
- *   - Lifts the node with a shadow + border highlight
- *   - Animates an SVG connector "data packet" dot travelling downward
- *   - Dims all unrelated layers
- *   - Shows a tooltip describing the data flow at that step
- *
- * An auto-play mode cycles through layers when nothing is hovered.
+ * Fully div/CSS based — no SVG, no overflow issues, works on all screen sizes.
+ * Hover any layer node to:
+ *   - Highlight it with its accent colour
+ *   - Dim all downstream layers
+ *   - Show a live info panel with description and data flow
+ *   - Animate the connector arrow below it
+ * Auto-plays through layers when idle.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -19,12 +18,15 @@ type LayerDef = {
   id: string;
   label: string;
   sublabel: string;
-  color: string;         // Tailwind color name
-  hex: string;           // Hex for SVG
-  lightHex: string;      // Light tint for SVG fill
-  flowLabel: string;     // Short label shown on the animated connector
-  tooltip: string;       // Shown in the info panel on hover
-  downstream: string[];  // IDs of layers this one sends data to
+  color: string;
+  bg: string;
+  border: string;
+  text: string;
+  dot: string;
+  flowLabel: string;
+  tooltip: string;
+  downstream: string[];
+  isBranch?: boolean;
 };
 
 const LAYERS: LayerDef[] = [
@@ -32,144 +34,100 @@ const LAYERS: LayerDef[] = [
     id: "browser",
     label: "Browser / React Frontend",
     sublabel: "React 19 · TypeScript · Tailwind · Recharts",
-    color: "blue",
-    hex: "#3b82f6",
-    lightHex: "#eff6ff",
-    flowLabel: "HTTP / tRPC call",
-    tooltip: "The user submits a financial statement form. React serialises the inputs and fires a tRPC mutation over HTTPS to the Express server.",
+    color: "#3b82f6",
+    bg: "bg-blue-50",
+    border: "border-blue-300",
+    text: "text-blue-700",
+    dot: "bg-blue-500",
+    flowLabel: "tRPC call over HTTPS",
+    tooltip: "The user submits a financial statement. React serialises the inputs and fires a tRPC mutation to the Express server.",
     downstream: ["trpc"],
   },
   {
     id: "trpc",
     label: "tRPC API Layer",
-    sublabel: "Type-safe procedures · Zod validation",
-    color: "indigo",
-    hex: "#6366f1",
-    lightHex: "#eef2ff",
-    flowLabel: "Validated input",
-    tooltip: "tRPC deserialises the request, runs Zod schema validation on every input field, and routes the call to the correct procedure handler with a fully-typed context object.",
+    sublabel: "Type-safe procedures · Zod validation · React Query",
+    color: "#6366f1",
+    bg: "bg-indigo-50",
+    border: "border-indigo-300",
+    text: "text-indigo-700",
+    dot: "bg-indigo-500",
+    flowLabel: "Validated, typed input",
+    tooltip: "tRPC deserialises the request, runs Zod schema validation on every field, and routes the call to the correct procedure with a fully-typed context object.",
     downstream: ["express"],
   },
   {
     id: "express",
     label: "Express Server",
     sublabel: "Node.js · OAuth middleware · Session cookies",
-    color: "violet",
-    hex: "#8b5cf6",
-    lightHex: "#f5f3ff",
-    flowLabel: "Authenticated context",
+    color: "#8b5cf6",
+    bg: "bg-violet-50",
+    border: "border-violet-300",
+    text: "text-violet-700",
+    dot: "bg-violet-500",
+    flowLabel: "Authenticated ctx.user",
     tooltip: "Express verifies the JWT session cookie, attaches the authenticated user to ctx, and passes control to the procedure handler. Unauthenticated requests are rejected here.",
     downstream: ["engine"],
   },
   {
     id: "engine",
     label: "Covenant Evaluation Engine",
-    sublabel: "DSCR · Leverage · Current Ratio · Alerts",
-    color: "amber",
-    hex: "#f59e0b",
-    lightHex: "#fffbeb",
-    flowLabel: "Ratio results + alerts",
-    tooltip: "The engine calculates DSCR, Leverage Ratio, Current Ratio, and Interest Coverage from the submitted figures. It evaluates each against the covenant threshold, determines Compliant / Warning / Breach, and creates Alert records for failures.",
+    sublabel: "DSCR · Leverage · Current Ratio · Interest Coverage",
+    color: "#f59e0b",
+    bg: "bg-amber-50",
+    border: "border-amber-300",
+    text: "text-amber-700",
+    dot: "bg-amber-500",
+    flowLabel: "Results + Alerts",
+    tooltip: "Calculates financial ratios from submitted figures, evaluates each against the covenant threshold, classifies as Compliant / Warning / Breach, and creates Alert records for failures.",
     downstream: ["database", "ai"],
   },
   {
     id: "database",
     label: "MySQL Database (TiDB)",
     sublabel: "Drizzle ORM · 7 tables · Type-safe queries",
-    color: "emerald",
-    hex: "#10b981",
-    lightHex: "#ecfdf5",
-    flowLabel: "Persisted rows",
-    tooltip: "Drizzle ORM writes covenant_results, alerts, and financial_submissions rows to TiDB. The typed query builder ensures column names and value types are checked at compile time — no raw SQL strings.",
-    downstream: [],
-  },
-  {
-    id: "ai",
-    label: "AI Layer (LLM)",
-    sublabel: "Manus Forge API · Server-side only",
-    color: "rose",
-    hex: "#f43f5e",
-    lightHex: "#fff1f2",
-    flowLabel: "Plain-language narrative",
-    tooltip: "When a Relationship Manager requests a summary, the server assembles a structured prompt from the borrower's covenant data and sends it to the LLM via the Forge API. The model returns a 3–4 sentence plain-English narrative. The API key never leaves the server.",
+    color: "#10b981",
+    bg: "bg-emerald-50",
+    border: "border-emerald-300",
+    text: "text-emerald-700",
+    dot: "bg-emerald-500",
+    flowLabel: "",
+    tooltip: "Drizzle ORM writes covenant_results, alerts, and financial_submissions to TiDB. Column names and value types are checked at compile time — no raw SQL strings.",
     downstream: [],
   },
 ];
 
-// ─── Layout constants ─────────────────────────────────────────────────────────
-
-const NODE_W = 520;
-const NODE_H = 62;
-const NODE_GAP = 28;
-const SVG_W = 640;
-const MAIN_X = (SVG_W - NODE_W) / 2;
-
-// Main column Y positions (browser, trpc, express, engine, database)
-const mainIds = ["browser", "trpc", "express", "engine", "database"];
-const sideIds = ["ai"];
-
-function getMainY(index: number) {
-  return 20 + index * (NODE_H + NODE_GAP);
-}
-
-// AI node: to the right of the engine node
-const engineIdx = mainIds.indexOf("engine");
-const ENGINE_Y = getMainY(engineIdx);
-const AI_X = MAIN_X + NODE_W + 32;
-const AI_Y = ENGINE_Y + NODE_H + NODE_GAP;
-
-const SVG_H = getMainY(mainIds.length) + 20;
-
-function getNodePos(id: string): { x: number; y: number } {
-  const mi = mainIds.indexOf(id);
-  if (mi !== -1) return { x: MAIN_X, y: getMainY(mi) };
-  if (id === "ai") return { x: AI_X, y: AI_Y };
-  return { x: MAIN_X, y: 0 };
-}
-
-// ─── Connector paths ──────────────────────────────────────────────────────────
-
-type ConnectorDef = {
-  id: string;
-  from: string;
-  to: string;
-  label: string;
+const AI_LAYER: LayerDef = {
+  id: "ai",
+  label: "AI Layer (LLM)",
+  sublabel: "Manus Forge API · Server-side only",
+  color: "#f43f5e",
+  bg: "bg-rose-50",
+  border: "border-rose-300",
+  text: "text-rose-700",
+  dot: "bg-rose-500",
+  flowLabel: "",
+  tooltip: "When a Relationship Manager requests a summary, the server assembles a structured prompt and calls the LLM via the Forge API. The model returns 3–4 plain-English sentences. The API key never leaves the server.",
+  downstream: [],
+  isBranch: true,
 };
 
-const CONNECTORS: ConnectorDef[] = [
-  { id: "c-browser-trpc",   from: "browser",  to: "trpc",     label: "tRPC call" },
-  { id: "c-trpc-express",   from: "trpc",     to: "express",  label: "Validated" },
-  { id: "c-express-engine", from: "express",  to: "engine",   label: "ctx.user" },
-  { id: "c-engine-db",      from: "engine",   to: "database", label: "Write rows" },
-  { id: "c-engine-ai",      from: "engine",   to: "ai",       label: "Prompt" },
-];
+const AUTH_LAYER: LayerDef = {
+  id: "auth",
+  label: "Auth & Roles",
+  sublabel: "OAuth · JWT · RBAC · 4 role tiers",
+  color: "#64748b",
+  bg: "bg-slate-50",
+  border: "border-slate-300",
+  text: "text-slate-600",
+  dot: "bg-slate-400",
+  flowLabel: "",
+  tooltip: "Manus OAuth issues a signed JWT session cookie after login. Every tRPC request verifies the cookie and enforces role-based access: admin, analyst, rm, or unauthenticated demo.",
+  downstream: [],
+  isBranch: true,
+};
 
-function getConnectorPath(from: string, to: string): string {
-  const f = getNodePos(from);
-  const t = getNodePos(to);
-
-  if (from === "engine" && to === "ai") {
-    // Curved path from engine right edge to ai top
-    const fx = f.x + NODE_W;
-    const fy = f.y + NODE_H / 2;
-    const tx = t.x + NODE_W / 2;
-    const ty = t.y;
-    return `M ${fx} ${fy} C ${fx + 60} ${fy}, ${tx} ${ty - 40}, ${tx} ${ty}`;
-  }
-
-  // Straight vertical connector between main column nodes
-  const cx = f.x + NODE_W / 2;
-  const fy = f.y + NODE_H;
-  const ty = t.y;
-  return `M ${cx} ${fy} L ${cx} ${ty}`;
-}
-
-function getConnectorLength(from: string, to: string): number {
-  if (from === "engine" && to === "ai") return 120;
-  const f = getNodePos(from);
-  const t = getNodePos(to);
-  return Math.abs(t.y - (f.y + NODE_H));
-}
+const MAIN_IDS = ["browser", "trpc", "express", "engine", "database"];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -182,293 +140,291 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
   const [autoIdx, setAutoIdx] = useState(0);
   const autoRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Auto-play: cycle through layers every 2.2s when nothing is hovered
   useEffect(() => {
     if (hovered) {
       if (autoRef.current) clearInterval(autoRef.current);
       return;
     }
     autoRef.current = setInterval(() => {
-      setAutoIdx((i) => (i + 1) % mainIds.length);
-    }, 2200);
+      setAutoIdx((i) => (i + 1) % MAIN_IDS.length);
+    }, 2400);
     return () => { if (autoRef.current) clearInterval(autoRef.current); };
   }, [hovered]);
 
-  // Treat 'auth-note' as a non-layer hover — fall back to auto-play layer
-  const resolvedHovered = hovered === "auth-note" ? null : hovered;
-  const activeId = resolvedHovered ?? mainIds[autoIdx % mainIds.length];
-  const activeLayer = LAYERS.find((l) => l.id === activeId) ?? LAYERS[0];
+  const activeId = hovered ?? MAIN_IDS[autoIdx % MAIN_IDS.length];
+  const allLayers = [...LAYERS, AI_LAYER, AUTH_LAYER];
+  const activeLayer = allLayers.find((l) => l.id === activeId) ?? LAYERS[0];
 
-  // Which connectors are "active" (downstream from the hovered node)
-  function isConnectorActive(c: ConnectorDef): boolean {
-    if (!activeId) return false;
-    // A connector is active if it originates from the active layer
-    // or from any layer upstream of it in the main chain
-    const activeMainIdx = mainIds.indexOf(activeId);
-    const fromMainIdx = mainIds.indexOf(c.from);
-    if (fromMainIdx !== -1 && activeMainIdx !== -1 && fromMainIdx <= activeMainIdx) return true;
-    if (activeId === "engine" && (c.from === "engine")) return true;
+  const activeMainIdx = MAIN_IDS.indexOf(activeId);
+
+  function isLayerActive(id: string) {
+    const idx = MAIN_IDS.indexOf(id);
+    if (idx !== -1) return idx <= activeMainIdx;
+    if (id === "ai" || id === "auth") return activeId === "engine" || id === activeId;
     return false;
   }
 
-  function isNodeDimmed(id: string): boolean {
-    if (!activeId) return false;
-    const activeMainIdx = mainIds.indexOf(activeId);
-    const nodeMainIdx = mainIds.indexOf(id);
-    if (nodeMainIdx !== -1 && activeMainIdx !== -1) {
-      return nodeMainIdx > activeMainIdx + 1;
-    }
-    if (id === "ai" && activeId !== "engine" && activeId !== "ai") return true;
+  function isLayerDimmed(id: string) {
+    const idx = MAIN_IDS.indexOf(id);
+    if (idx !== -1) return idx > activeMainIdx + 1;
+    if (id === "ai" || id === "auth") return activeId !== "engine" && activeId !== "ai" && activeId !== "auth";
     return false;
   }
 
   return (
     <div className="w-full">
-      {/* Info panel — shown ABOVE the diagram on mobile for clarity */}
-      <div className="flex flex-col-reverse lg:flex-row gap-6 items-start">
-        {/* SVG Diagram */}
-        <div className="w-full lg:flex-1 min-w-0 overflow-x-auto">
-          <svg
-            viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-            className="w-full h-auto block"
-            style={{ maxWidth: 640 }}
-          >
-            {/* Connector paths */}
-            {CONNECTORS.map((c) => {
-              const active = isConnectorActive(c);
-              const fromLayer = LAYERS.find((l) => l.id === c.from)!;
-              const pathD = getConnectorPath(c.from, c.to);
-              const pathLen = getConnectorLength(c.from, c.to);
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
+
+        {/* ── Flow diagram ── */}
+        <div className="w-full lg:flex-1 min-w-0">
+          {/* Main column */}
+          <div className="flex flex-col items-stretch gap-0">
+            {LAYERS.map((layer, i) => {
+              // Database is rendered inside the engine branch — skip it here
+              if (layer.id === "database") return null;
+
+              const active = isLayerActive(layer.id);
+              const dimmed = isLayerDimmed(layer.id);
+              const isHovered = hovered === layer.id || (hovered === null && MAIN_IDS[autoIdx % MAIN_IDS.length] === layer.id);
+              const showConnector = i < LAYERS.length - 1 && layer.id !== "engine";
+              const isBranchPoint = layer.id === "engine";
 
               return (
-                <g key={c.id}>
-                  {/* Base connector line */}
-                  <path
-                    d={pathD}
-                    fill="none"
-                    stroke={active ? fromLayer.hex : "#e2e8f0"}
-                    strokeWidth={active ? 2.5 : 1.5}
-                    strokeDasharray={active ? "none" : "4 4"}
-                    style={{ transition: "stroke 0.3s, stroke-width 0.3s" }}
-                  />
+                <div key={layer.id} className="flex flex-col items-stretch">
+                  {/* Node */}
+                  <button
+                    onMouseEnter={() => setHovered(layer.id)}
+                    onMouseLeave={() => setHovered(null)}
+                    onClick={() => onLayerClick?.(layer.id)}
+                    className={`
+                      w-full text-left rounded-xl border-2 px-5 py-4 transition-all duration-200
+                      ${isHovered
+                        ? `${layer.bg} ${layer.border} shadow-md scale-[1.01]`
+                        : dimmed
+                        ? "bg-slate-50 border-slate-100 opacity-40"
+                        : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
+                      }
+                    `}
+                    style={{ borderLeftWidth: 4, borderLeftColor: isHovered ? layer.color : dimmed ? "#e2e8f0" : "#cbd5e1" }}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className={`font-semibold text-sm truncate ${isHovered ? layer.text : dimmed ? "text-slate-400" : "text-slate-700"}`}>
+                          {layer.label}
+                        </div>
+                        <div className={`text-xs mt-0.5 truncate ${isHovered ? layer.text + " opacity-70" : "text-slate-400"}`}>
+                          {layer.sublabel}
+                        </div>
+                      </div>
+                      {isHovered && (
+                        <div className={`h-2.5 w-2.5 rounded-full shrink-0 animate-pulse ${layer.dot}`} />
+                      )}
+                    </div>
+                  </button>
 
-                  {/* Animated data packet dot */}
-                  {active && (
-                    <circle r={5} fill={fromLayer.hex} opacity={0.9}>
-                      <animateMotion
-                        dur="1.1s"
-                        repeatCount="indefinite"
-                        path={pathD}
-                        rotate="auto"
-                      />
-                    </circle>
+                  {/* Connector + branch */}
+                  {showConnector && (
+                    <div className="flex items-start">
+                      {/* Main vertical connector */}
+                      <div className="flex flex-col items-center" style={{ width: 60, marginLeft: 24 }}>
+                        <div
+                          className="w-0.5 transition-all duration-300"
+                          style={{
+                            height: isBranchPoint ? 0 : 28,
+                            backgroundColor: active ? layer.color : "#e2e8f0",
+                          }}
+                        />
+                        {/* Flow label */}
+                        {layer.flowLabel && active && (
+                          <div
+                            className="text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+                            style={{ color: layer.color, backgroundColor: layer.color + "15", border: `1px solid ${layer.color}30` }}
+                          >
+                            {layer.flowLabel}
+                          </div>
+                        )}
+                        {!isBranchPoint && (
+                          <div
+                            className="w-0.5 transition-all duration-300"
+                            style={{
+                              height: layer.flowLabel && active ? 8 : 28,
+                              backgroundColor: active ? layer.color : "#e2e8f0",
+                            }}
+                          />
+                        )}
+                        {/* Arrow head */}
+                        {!isBranchPoint && (
+                          <div
+                            className="w-0 h-0 transition-all duration-300"
+                            style={{
+                              borderLeft: "5px solid transparent",
+                              borderRight: "5px solid transparent",
+                              borderTop: `7px solid ${active ? layer.color : "#e2e8f0"}`,
+                            }}
+                          />
+                        )}
+                      </div>
+
+                      {/* Branch connectors for engine → database + ai */}
+                      {isBranchPoint && (
+                        <div className="flex-1 pt-2 pb-1">
+                          <div className="flex items-start gap-3">
+                            {/* Left branch: database */}
+                            <div className="flex-1 flex flex-col items-center">
+                              <div className="flex items-center w-full justify-center">
+                                <div className="h-0.5 flex-1 transition-all duration-300" style={{ backgroundColor: isLayerActive("database") ? layer.color : "#e2e8f0" }} />
+                                <div className="w-0.5 h-6 transition-all duration-300 mx-0" style={{ backgroundColor: isLayerActive("database") ? layer.color : "#e2e8f0" }} />
+                                <div className="h-0.5 flex-1 opacity-0" />
+                              </div>
+                              <div
+                                className="w-0 h-0"
+                                style={{
+                                  borderLeft: "5px solid transparent",
+                                  borderRight: "5px solid transparent",
+                                  borderTop: `7px solid ${isLayerActive("database") ? layer.color : "#e2e8f0"}`,
+                                }}
+                              />
+                            </div>
+
+                            {/* Center: vertical line down */}
+                            <div className="flex flex-col items-center" style={{ width: 40 }}>
+                              <div className="w-0.5 h-4 transition-all duration-300" style={{ backgroundColor: isLayerActive("engine") ? layer.color : "#e2e8f0" }} />
+                              {layer.flowLabel && isLayerActive("engine") && (
+                                <div className="text-xs font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap text-center" style={{ color: layer.color, backgroundColor: layer.color + "15", fontSize: 9 }}>
+                                  {layer.flowLabel}
+                                </div>
+                              )}
+                              <div className="w-0.5 h-4 transition-all duration-300" style={{ backgroundColor: isLayerActive("engine") ? layer.color : "#e2e8f0" }} />
+                              <div
+                                className="w-0 h-0"
+                                style={{
+                                  borderLeft: "5px solid transparent",
+                                  borderRight: "5px solid transparent",
+                                  borderTop: `7px solid ${isLayerActive("engine") ? layer.color : "#e2e8f0"}`,
+                                }}
+                              />
+                            </div>
+
+                            {/* Right branch: AI */}
+                            <div className="flex-1 flex flex-col items-center">
+                              <div className="flex items-center w-full justify-center">
+                                <div className="h-0.5 opacity-0 flex-1" />
+                                <div className="w-0.5 h-6 transition-all duration-300 mx-0" style={{ backgroundColor: isLayerActive("ai") || activeId === "ai" ? AI_LAYER.color : "#e2e8f0" }} />
+                                <div className="h-0.5 flex-1 transition-all duration-300" style={{ backgroundColor: isLayerActive("ai") || activeId === "ai" ? AI_LAYER.color : "#e2e8f0" }} />
+                              </div>
+                              <div
+                                className="w-0 h-0"
+                                style={{
+                                  borderLeft: "5px solid transparent",
+                                  borderRight: "5px solid transparent",
+                                  borderTop: `7px solid ${isLayerActive("ai") || activeId === "ai" ? AI_LAYER.color : "#e2e8f0"}`,
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Branch nodes: database left, AI right */}
+                          <div className="flex items-stretch gap-3 mt-1">
+                            {/* Database node */}
+                            <button
+                              onMouseEnter={() => setHovered("database")}
+                              onMouseLeave={() => setHovered(null)}
+                              onClick={() => onLayerClick?.("database")}
+                              className={`
+                                flex-1 text-left rounded-xl border-2 px-4 py-3 transition-all duration-200
+                                ${hovered === "database"
+                                  ? `${LAYERS[4].bg} ${LAYERS[4].border} shadow-md`
+                                  : isLayerDimmed("database")
+                                  ? "bg-slate-50 border-slate-100 opacity-40"
+                                  : "bg-white border-slate-200 hover:border-slate-300"
+                                }
+                              `}
+                              style={{ borderLeftWidth: 4, borderLeftColor: hovered === "database" ? LAYERS[4].color : "#cbd5e1" }}
+                            >
+                              <div className={`font-semibold text-xs ${hovered === "database" ? LAYERS[4].text : "text-slate-600"}`}>MySQL Database</div>
+                              <div className={`text-xs mt-0.5 ${hovered === "database" ? LAYERS[4].text + " opacity-70" : "text-slate-400"}`}>Drizzle ORM · 7 tables</div>
+                            </button>
+
+                            {/* AI node */}
+                            <button
+                              onMouseEnter={() => setHovered("ai")}
+                              onMouseLeave={() => setHovered(null)}
+                              onClick={() => onLayerClick?.("ai")}
+                              className={`
+                                flex-1 text-left rounded-xl border-2 px-4 py-3 transition-all duration-200
+                                ${hovered === "ai"
+                                  ? `${AI_LAYER.bg} ${AI_LAYER.border} shadow-md`
+                                  : isLayerDimmed("ai")
+                                  ? "bg-slate-50 border-slate-100 opacity-40"
+                                  : "bg-white border-slate-200 hover:border-slate-300"
+                                }
+                              `}
+                              style={{ borderLeftWidth: 4, borderLeftColor: hovered === "ai" ? AI_LAYER.color : "#cbd5e1" }}
+                            >
+                              <div className={`font-semibold text-xs ${hovered === "ai" ? AI_LAYER.text : "text-slate-600"}`}>AI Layer (LLM)</div>
+                              <div className={`text-xs mt-0.5 ${hovered === "ai" ? AI_LAYER.text + " opacity-70" : "text-slate-400"}`}>Forge API · Server-side</div>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
-
-                  {/* Connector label */}
-                  {active && c.from !== "engine" || (active && c.from === "engine" && c.to !== "ai") ? (
-                    <text
-                      x={MAIN_X + NODE_W / 2 + 12}
-                      y={getNodePos(c.from).y + NODE_H + NODE_GAP / 2 + 4}
-                      fontSize={9}
-                      fill={fromLayer.hex}
-                      fontFamily="Inter, sans-serif"
-                      fontWeight="600"
-                      opacity={active ? 1 : 0}
-                      style={{ transition: "opacity 0.3s" }}
-                    >
-                      {c.label}
-                    </text>
-                  ) : null}
-                </g>
+                </div>
               );
             })}
 
-            {/* Layer nodes */}
-            {LAYERS.map((layer) => {
-              const pos = getNodePos(layer.id);
-              const isActive = layer.id === activeId;
-              const dimmed = isNodeDimmed(layer.id);
-              const nodeW = layer.id === "ai" ? NODE_W * 0.72 : NODE_W;
+            {/* Note: database node is rendered in the branch above, not here */}
 
-              return (
-                <g
-                  key={layer.id}
-                  style={{ cursor: "pointer" }}
-                  onMouseEnter={() => setHovered(layer.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() => onLayerClick?.(layer.id)}
-                >
-                  {/* Drop shadow filter */}
-                  <defs>
-                    <filter id={`shadow-${layer.id}`} x="-10%" y="-20%" width="120%" height="150%">
-                      <feDropShadow
-                        dx="0"
-                        dy={isActive ? 4 : 1}
-                        stdDeviation={isActive ? 8 : 2}
-                        floodColor={layer.hex}
-                        floodOpacity={isActive ? 0.2 : 0.06}
-                      />
-                    </filter>
-                  </defs>
-
-                  {/* Node background */}
-                  <rect
-                    x={pos.x}
-                    y={isActive ? pos.y - 2 : pos.y}
-                    width={nodeW}
-                    height={NODE_H}
-                    rx={10}
-                    fill={isActive ? layer.lightHex : "#ffffff"}
-                    stroke={isActive ? layer.hex : dimmed ? "#f1f5f9" : "#e2e8f0"}
-                    strokeWidth={isActive ? 2 : 1}
-                    filter={`url(#shadow-${layer.id})`}
-                    opacity={dimmed ? 0.35 : 1}
-                    style={{ transition: "all 0.25s ease" }}
-                  />
-
-                  {/* Left accent bar */}
-                  <rect
-                    x={pos.x}
-                    y={isActive ? pos.y - 2 : pos.y}
-                    width={4}
-                    height={NODE_H}
-                    rx={2}
-                    fill={isActive ? layer.hex : dimmed ? "#e2e8f0" : "#cbd5e1"}
-                    opacity={dimmed ? 0.35 : 1}
-                    style={{ transition: "fill 0.25s" }}
-                  />
-
-                  {/* Pulse ring on active */}
-                  {isActive && (
-                    <rect
-                      x={pos.x - 3}
-                      y={pos.y - 5}
-                      width={nodeW + 6}
-                      height={NODE_H + 6}
-                      rx={13}
-                      fill="none"
-                      stroke={layer.hex}
-                      strokeWidth={1.5}
-                      opacity={0}
-                    >
-                      <animate attributeName="opacity" values="0.6;0" dur="1s" repeatCount="indefinite" />
-                      <animate attributeName="width" values={`${nodeW + 6};${nodeW + 18}`} dur="1s" repeatCount="indefinite" />
-                      <animate attributeName="height" values={`${NODE_H + 6};${NODE_H + 18}`} dur="1s" repeatCount="indefinite" />
-                      <animate attributeName="x" values={`${pos.x - 3};${pos.x - 9}`} dur="1s" repeatCount="indefinite" />
-                      <animate attributeName="y" values={`${pos.y - 5};${pos.y - 11}`} dur="1s" repeatCount="indefinite" />
-                    </rect>
-                  )}
-
-                  {/* Label */}
-                  <text
-                    x={pos.x + 18}
-                    y={isActive ? pos.y - 2 + NODE_H / 2 - 7 : pos.y + NODE_H / 2 - 7}
-                    fontSize={11.5}
-                    fontWeight="700"
-                    fill={isActive ? layer.hex : dimmed ? "#94a3b8" : "#1e293b"}
-                    fontFamily="Inter, sans-serif"
-                    style={{ transition: "fill 0.25s" }}
-                  >
-                    {layer.label}
-                  </text>
-                  <text
-                    x={pos.x + 18}
-                    y={isActive ? pos.y - 2 + NODE_H / 2 + 10 : pos.y + NODE_H / 2 + 10}
-                    fontSize={9.5}
-                    fill={isActive ? layer.hex : dimmed ? "#cbd5e1" : "#64748b"}
-                    opacity={isActive ? 0.75 : 1}
-                    fontFamily="Inter, sans-serif"
-                    style={{ transition: "fill 0.25s" }}
-                  >
-                    {layer.sublabel}
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* Auth node — static side card at bottom right */}
-            <g
-              style={{ cursor: "pointer" }}
-              onMouseEnter={() => setHovered("auth-note")}
-              onMouseLeave={() => setHovered(null)}
-            >
-              <rect
-                x={AI_X}
-                y={AI_Y + NODE_H + NODE_GAP}
-                width={NODE_W * 0.72}
-                height={NODE_H * 0.85}
-                rx={10}
-                fill={hovered === "auth-note" ? "#f8fafc" : "#f8fafc"}
-                stroke={hovered === "auth-note" ? "#475569" : "#e2e8f0"}
-                strokeWidth={hovered === "auth-note" ? 2 : 1}
-                strokeDasharray="5 3"
-                style={{ transition: "stroke 0.25s" }}
-              />
-              <rect x={AI_X} y={AI_Y + NODE_H + NODE_GAP} width={4} height={NODE_H * 0.85} rx={2} fill="#475569" />
-              <text x={AI_X + 18} y={AI_Y + NODE_H + NODE_GAP + NODE_H * 0.85 / 2 - 6} fontSize={11} fontWeight="700" fill="#334155" fontFamily="Inter, sans-serif">Auth & Roles</text>
-              <text x={AI_X + 18} y={AI_Y + NODE_H + NODE_GAP + NODE_H * 0.85 / 2 + 9} fontSize={9} fill="#64748b" fontFamily="Inter, sans-serif">OAuth · JWT · RBAC · 4 tiers</text>
-            </g>
-
-            {/* "Cross-cutting" label for Auth */}
-            <text
-              x={AI_X + NODE_W * 0.72 / 2}
-              y={AI_Y + NODE_H + NODE_GAP - 6}
-              fontSize={8}
-              fill="#94a3b8"
-              textAnchor="middle"
-              fontFamily="Inter, sans-serif"
-            >
-              cross-cutting concern
-            </text>
-          </svg>
+            {/* Auth — cross-cutting concern */}
+            <div className="mt-4 pt-4 border-t border-dashed border-slate-200">
+              <button
+                onMouseEnter={() => setHovered("auth")}
+                onMouseLeave={() => setHovered(null)}
+                className={`
+                  w-full text-left rounded-xl border-2 border-dashed px-5 py-3 transition-all duration-200
+                  ${hovered === "auth" ? `${AUTH_LAYER.bg} ${AUTH_LAYER.border}` : "bg-slate-50/50 border-slate-200"}
+                `}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className={`font-semibold text-sm ${hovered === "auth" ? AUTH_LAYER.text : "text-slate-500"}`}>
+                      Auth & Roles <span className="text-xs font-normal ml-1 opacity-60">— cross-cutting concern</span>
+                    </div>
+                    <div className="text-xs text-slate-400 mt-0.5">OAuth · JWT · RBAC · 4 role tiers (admin, analyst, rm, demo)</div>
+                  </div>
+                  {hovered === "auth" && <div className={`h-2 w-2 rounded-full ${AUTH_LAYER.dot} animate-pulse`} />}
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Info panel */}
-        <div className="w-full lg:w-72 shrink-0 lg:sticky lg:top-4">
+        {/* ── Info panel ── */}
+        <div className="w-full lg:w-64 xl:w-72 shrink-0">
           <div
             className="rounded-2xl border-2 p-5 transition-all duration-300"
-            style={{
-              borderColor: activeLayer.hex,
-              backgroundColor: activeLayer.lightHex,
-            }}
+            style={{ borderColor: activeLayer.color, backgroundColor: activeLayer.color + "0d" }}
           >
             <div className="flex items-center gap-2 mb-3">
-              <div
-                className="h-2.5 w-2.5 rounded-full animate-pulse"
-                style={{ backgroundColor: activeLayer.hex }}
-              />
-              <span
-                className="text-xs font-bold uppercase tracking-wider"
-                style={{ color: activeLayer.hex }}
-              >
+              <div className="h-2.5 w-2.5 rounded-full animate-pulse" style={{ backgroundColor: activeLayer.color }} />
+              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: activeLayer.color }}>
                 Active Layer
               </span>
             </div>
-            <h3 className="font-bold text-slate-800 text-sm leading-snug mb-2">
-              {activeLayer.label}
-            </h3>
-            <p className="text-xs text-slate-600 leading-relaxed mb-4">
-              {activeLayer.tooltip}
-            </p>
+            <h3 className="font-bold text-slate-800 text-sm leading-snug mb-2">{activeLayer.label}</h3>
+            <p className="text-xs text-slate-600 leading-relaxed mb-4">{activeLayer.tooltip}</p>
+
             {activeLayer.downstream.length > 0 && (
               <div>
-                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Sends data to
-                </div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Sends data to</div>
                 <div className="flex flex-wrap gap-1.5">
                   {activeLayer.downstream.map((d) => {
-                    const dl = LAYERS.find((l) => l.id === d)!;
+                    const dl = allLayers.find((l) => l.id === d)!;
                     return (
                       <span
                         key={d}
-                        className="text-xs font-medium px-2.5 py-1 rounded-full border"
-                        style={{
-                          backgroundColor: dl.lightHex,
-                          borderColor: dl.hex,
-                          color: dl.hex,
-                          borderWidth: 1,
-                          opacity: 0.9,
-                        }}
+                        className="text-xs font-medium px-2.5 py-1 rounded-full"
+                        style={{ backgroundColor: dl.color + "15", color: dl.color, border: `1px solid ${dl.color}30` }}
                       >
                         {dl.label.split(" ")[0]}
                       </span>
@@ -479,38 +435,32 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
             )}
             {activeLayer.downstream.length === 0 && (
               <div
-                className="text-xs font-medium px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5"
-                style={{
-                  backgroundColor: activeLayer.lightHex,
-                  borderColor: activeLayer.hex,
-                  color: activeLayer.hex,
-                  borderWidth: 1,
-                }}
+                className="text-xs font-medium px-3 py-1.5 rounded-full inline-flex items-center gap-1.5"
+                style={{ backgroundColor: activeLayer.color + "15", color: activeLayer.color, border: `1px solid ${activeLayer.color}30` }}
               >
-                <span className="h-1.5 w-1.5 rounded-full inline-block" style={{ backgroundColor: activeLayer.hex }} />
-                Terminal layer — data is persisted here
+                <span className="h-1.5 w-1.5 rounded-full inline-block" style={{ backgroundColor: activeLayer.color }} />
+                Terminal layer
               </div>
             )}
           </div>
 
-          {/* Hint */}
           <p className="text-xs text-slate-400 text-center mt-3 leading-relaxed">
             Hover any layer to trace the data flow.
             <br />Auto-playing when idle.
           </p>
 
-          {/* Layer pills for quick navigation */}
+          {/* Quick nav pills */}
           <div className="flex flex-wrap gap-1.5 mt-4 justify-center">
-            {LAYERS.map((l) => (
+            {[...LAYERS, AI_LAYER].map((l) => (
               <button
                 key={l.id}
                 onMouseEnter={() => setHovered(l.id)}
                 onMouseLeave={() => setHovered(null)}
                 className="text-xs px-2.5 py-1 rounded-full border font-medium transition-all"
                 style={{
-                  backgroundColor: activeId === l.id ? l.lightHex : "white",
-                  borderColor: activeId === l.id ? l.hex : "#e2e8f0",
-                  color: activeId === l.id ? l.hex : "#64748b",
+                  backgroundColor: activeId === l.id ? l.color + "15" : "white",
+                  borderColor: activeId === l.id ? l.color : "#e2e8f0",
+                  color: activeId === l.id ? l.color : "#64748b",
                 }}
               >
                 {l.label.split(" ")[0]}
@@ -518,6 +468,7 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
             ))}
           </div>
         </div>
+
       </div>
     </div>
   );
