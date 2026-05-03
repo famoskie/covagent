@@ -224,13 +224,14 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col lg:flex-row gap-6 items-start">
+      {/* Info panel — shown ABOVE the diagram on mobile for clarity */}
+      <div className="flex flex-col-reverse lg:flex-row gap-6 items-start">
         {/* SVG Diagram */}
-        <div className="w-full lg:flex-1 overflow-x-auto">
+        <div className="w-full lg:flex-1 min-w-0 overflow-x-auto">
           <svg
             viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-            className="w-full"
-            style={{ minWidth: 340, maxWidth: 640 }}
+            className="w-full h-auto block"
+            style={{ maxWidth: 640 }}
           >
             {/* Connector paths */}
             {CONNECTORS.map((c) => {
@@ -423,7 +424,7 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
         </div>
 
         {/* Info panel */}
-        <div className="w-full lg:w-72 shrink-0">
+        <div className="w-full lg:w-72 shrink-0 lg:sticky lg:top-4">
           <div
             className="rounded-2xl border-2 p-5 transition-all duration-300"
             style={{
@@ -463,8 +464,10 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
                         className="text-xs font-medium px-2.5 py-1 rounded-full border"
                         style={{
                           backgroundColor: dl.lightHex,
-                          borderColor: dl.hex + "60",
+                          borderColor: dl.hex,
                           color: dl.hex,
+                          borderWidth: 1,
+                          opacity: 0.9,
                         }}
                       >
                         {dl.label.split(" ")[0]}
@@ -478,9 +481,10 @@ export default function AnimatedArchDiagram({ onLayerClick }: Props) {
               <div
                 className="text-xs font-medium px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5"
                 style={{
-                  backgroundColor: activeLayer.hex + "15",
-                  borderColor: activeLayer.hex + "40",
+                  backgroundColor: activeLayer.lightHex,
+                  borderColor: activeLayer.hex,
                   color: activeLayer.hex,
+                  borderWidth: 1,
                 }}
               >
                 <span className="h-1.5 w-1.5 rounded-full inline-block" style={{ backgroundColor: activeLayer.hex }} />
